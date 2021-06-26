@@ -114,7 +114,7 @@ AddEventHandler('prison:client:Enter', function(time)
 	end
 	local RandomStartPosition = Config.Locations.spawns[math.random(1, #Config.Locations.spawns)]
 	SetEntityCoords(PlayerPedId(), RandomStartPosition.coords.x, RandomStartPosition.coords.y, RandomStartPosition.coords.z - 0.9, 0, 0, 0, false)
-	SetEntityHeading(PlayerPedId(), RandomStartPosition.coords.h)
+	SetEntityHeading(PlayerPedId(), RandomStartPosition.coords.w)
 	Citizen.Wait(500)
 	TriggerEvent('animations:client:EmoteCommandStart', {RandomStartPosition.animation})
 
@@ -157,7 +157,7 @@ AddEventHandler('prison:client:Leave', function()
 			Citizen.Wait(10)
 		end
 		SetEntityCoords(PlayerPedId(), Config.Locations["outside"].coords.x, Config.Locations["outside"].coords.y, Config.Locations["outside"].coords.z, 0, 0, 0, false)
-		SetEntityHeading(PlayerPedId(), Config.Locations["outside"].coords.h)
+		SetEntityHeading(PlayerPedId(), Config.Locations["outside"].coords.w)
 
 		Citizen.Wait(500)
 
@@ -185,7 +185,7 @@ AddEventHandler('prison:client:UnjailPerson', function()
 			Citizen.Wait(10)
 		end
 		SetEntityCoords(PlayerPedId(), Config.Locations["outside"].coords.x, Config.Locations["outside"].coords.y, Config.Locations["outside"].coords.z, 0, 0, 0, false)
-		SetEntityHeading(PlayerPedId(), Config.Locations["outside"].coords.h)
+		SetEntityHeading(PlayerPedId(), Config.Locations["outside"].coords.w)
 
 		Citizen.Wait(500)
 
