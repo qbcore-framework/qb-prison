@@ -9,17 +9,17 @@ local securityLockdown = false
 local Gates = {
     [1] = {
         gatekey = 38,
-        coords = {x = 1845.99, y = 2604.7, z = 45.58, h = 94.5},  
+        coords = vector3(1845.99, 2604.7, 45.58),
         hit = false,
     },
     [2] = {
         gatekey = 39,
-        coords = {x = 1819.47, y = 2604.67, z = 45.56, h = 98.5},
+        coords = vector3(1819.47, 2604.67, 45.56),
         hit = false,
     },
     [3] = {
         gatekey = 40,
-        coords = {x = 1804.74, y = 2616.311, z = 45.61, h = 335.5},
+        coords = vector3(1804.74, 2616.311, 45.61),
         hit = false,
     }
 }
@@ -38,7 +38,7 @@ Citizen.CreateThread(function()
             if PlayerJob.name ~= "police" then
                 local pos = GetEntityCoords(PlayerPedId())
                 for k, v in pairs(Gates) do
-                    local dist =  #(pos - vector3(Gates[k].coords.x, Gates[k].coords.y, Gates[k].coords.z))
+                    local dist =  #(pos - Gates[k].coords)
                     if (dist < 1.5) then
                         currentGate = k
                         inRange = true
