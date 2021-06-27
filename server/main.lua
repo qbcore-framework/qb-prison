@@ -101,15 +101,6 @@ AddEventHandler('prison:server:JailAlarm', function()
     end
 end)
 
--- Should Already Be Registered Elsewhere
-
---[[ QBCore.Functions.CreateUseableItem("electronickit", function(source, item)
-    local Player = QBCore.Functions.GetPlayer(source)
-	if Player.Functions.GetItemByName(item.name) then
-        TriggerClientEvent("electronickit:UseElectronickit", source)
-    end
-end) ]]
-
 QBCore.Functions.CreateCallback('prison:server:IsAlarmActive', function(source, cb)
     cb(AlarmActivated)
 end)
