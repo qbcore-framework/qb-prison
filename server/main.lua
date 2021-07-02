@@ -1,6 +1,3 @@
-QBCore = nil
-TriggerEvent('QBCore:GetObject', function(obj) QBCore = obj end)
-
 local AlarmActivated = false
 
 RegisterServerEvent('prison:server:SetJailStatus')
