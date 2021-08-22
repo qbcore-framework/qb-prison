@@ -99,7 +99,7 @@ end)
 RegisterNetEvent('prison:client:Enter')
 AddEventHandler('prison:client:Enter', function(time)
 	QBCore.Functions.Notify("You're in jail for "..time.." months..", "error")
-	TriggerEvent("chatMessage", "SYSTEM", "warning", "Your property has been seized, you'll get everything back when your time is up..")
+	TriggerEvent("chatMessage", "SYSTEM", "warning", "DOC | Your property has been seized, you'll get everything back when your time is up..")
     	JailIntro()
     	FreezeEntityPosition(playerPed, false)	
 	DoScreenFadeOut(500)
@@ -134,7 +134,7 @@ AddEventHandler('prison:client:Enter', function(time)
 
 		timer = timer - 1
 		if timer > 0 then
-		    TriggerEvent("chatMessage", "SYSTEM", "warning", 'You have ' .. timer .. ' months remaining')
+		    TriggerEvent("chatMessage", "SYSTEM", "warning", 'DOC | You have ' .. timer .. ' months remaining')
 		else
 		    inJail = false
 		end
@@ -150,7 +150,7 @@ AddEventHandler('prison:client:Leave', function()
 		jailTime = 0
 		TriggerServerEvent("prison:server:SetJailStatus", 0)
 		TriggerServerEvent("prison:server:GiveJailItems")
-		TriggerEvent("chatMessage", "SYSTEM", "warning", "you've received your property back..")
+		TriggerEvent("chatMessage", "SYSTEM", "warning", "DOC | you've received your property back..")
 		inJail = false
 		RemoveBlip(currentBlip)
 		RemoveBlip(CellsBlip)
@@ -178,7 +178,7 @@ AddEventHandler('prison:client:UnjailPerson', function()
 	if jailTime > 0 then
 		TriggerServerEvent("prison:server:SetJailStatus", 0)
 		TriggerServerEvent("prison:server:GiveJailItems")
-		TriggerEvent("chatMessage", "SYSTEM", "warning", "You got your property back..")
+		TriggerEvent("chatMessage", "SYSTEM", "warning", "DOC | You got your property back..")
 		inJail = false
 		RemoveBlip(currentBlip)
 		RemoveBlip(CellsBlip)
