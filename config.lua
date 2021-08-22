@@ -45,6 +45,9 @@ Config.Locations = {
     ["shop"] = {
         coords = vector4(1779.6, 2589.82, 45.79, 0.5),
     },
+    ["takephotos"] = {
+        coords = vector3(402.9, -996.7, -100.0),
+    },    
     spawns = {
         [1] = {
             animation = "bumsleep",
