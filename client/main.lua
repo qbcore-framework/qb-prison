@@ -134,10 +134,7 @@ AddEventHandler('prison:client:Enter', function(time)
 
 		timer = timer - 1
 		if timer > 0 then
-		    TriggerEvent('chat:addMessage', {
-			template = '<div class="chat-message" style="backgroud-color: rgb(33, 118, 255);">You have ' .. timer .. ' months remaining</div>',
-			args = {}
-		    })
+		    TriggerEvent("chatMessage", "SYSTEM", "warning", 'You have ' .. timer .. ' months remaining')
 		else
 		    inJail = false
 		end
