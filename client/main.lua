@@ -126,6 +126,23 @@ AddEventHandler('prison:client:Enter', function(time)
 
 	DoScreenFadeIn(1000)
 	QBCore.Functions.Notify("Do some work for sentence reduction, instant job: "..Config.Jobs[currentJob])
+	    minutes = tonumber(time)
+
+	    local timer = minutes
+	    while inJail do
+		Citizen.Wait(60000)
+
+		timer = timer - 1
+		if timer > 0 then
+		    TriggerEvent('chat:addMessage', {
+			template = '<div class="chat-message" style="backgroud-color: rgb(33, 118, 255);">You have ' .. timer .. ' months remaining</div>',
+			args = {}
+		    })
+		else
+		    inJail = false
+		end
+	    end
+		
 end)
 
 RegisterNetEvent('prison:client:Leave')
