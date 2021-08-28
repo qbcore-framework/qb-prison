@@ -43,7 +43,7 @@ Config.Locations = {
         coords = vector4(1693.33, 2569.51, 45.55, 123.5),
     },
     ["shop"] = {
-        coords = vector4(1695.63, 2560.57, 45.57, 0.5),
+        coords = vector4(1786.19, 2557.77, 45.62, 0.5),
     },
     spawns = {
         [1] = {
