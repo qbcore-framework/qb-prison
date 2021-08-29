@@ -100,7 +100,8 @@ RegisterNetEvent('prison:client:Enter')
 AddEventHandler('prison:client:Enter', function(time)
 	QBCore.Functions.Notify("You're in jail for "..time.." months..", "error")
 	TriggerEvent("chatMessage", "SYSTEM", "warning", "DOC | Your property has been seized, you'll get everything back when your time is up..")
-    	JailIntro()
+    	JailIclothes()
+	JailIntro()
     	FreezeEntityPosition(playerPed, false)	
 	DoScreenFadeOut(500)
 	while not IsScreenFadedOut() do
@@ -294,4 +295,51 @@ function JailIntro()
     DoScreenFadeOut(1100)   
     Citizen.Wait(2000)
     TriggerEvent('InteractSound_CL:PlayOnOne', 'jaildoor', 1.0)
+end
+
+function JailIclothes()
+	local ped = ped
+	local model = GetEntityModel(ped)
+	local clothesrand = math.random(1,2)
+    if model == `mp_f_freemode_01` then
+		if clothesrand == 1 then
+			ClearPedProp(ped, 0)
+			SetPedComponentVariation(ped, 3, 3, 0, 2) -- Arms
+			SetPedComponentVariation(ped, 4, 38, 0, 2) -- Leg
+			SetPedComponentVariation(ped, 5, -1, 0, 2) -- Parachute / bag
+			SetPedComponentVariation(ped, 6, 27, 11, 2) -- Shoes
+			SetPedComponentVariation(ped, 8, 14, 0, 2) -- Undershirt
+			SetPedComponentVariation(ped, 9, -1, 0, 2) -- Kevlar
+			SetPedComponentVariation(ped, 11, 67, 0, 2) -- Torso 2
+		else
+			ClearPedProp(ped, 0)
+			SetPedComponentVariation(ped, 3, 14, 0, 2) -- Arms
+			SetPedComponentVariation(ped, 4, 38, 1, 2) -- Leg
+			SetPedComponentVariation(ped, 5, -1, 0, 2) -- Parachute / bag
+			SetPedComponentVariation(ped, 6, 27, 11, 2) -- Shoes
+			SetPedComponentVariation(ped, 8, 14, 0, 2) -- Undershirt
+			SetPedComponentVariation(ped, 9, -1, 0, 2) -- Kevlar
+			SetPedComponentVariation(ped, 11, 84, 2, 2) -- Torso 2
+		end
+	elseif model == `mp_m_freemode_01` then
+		if clothesrand == 1 then
+			ClearPedProp(ped, 0)
+			SetPedComponentVariation(ped, 3, 5, 0, 2) -- Arms
+			SetPedComponentVariation(ped, 4, 38, 1, 2) -- Leg
+			SetPedComponentVariation(ped, 5, -1, 0, 2) -- Parachute / bag
+			SetPedComponentVariation(ped, 6, 6, 10, 2) -- Shoes
+			SetPedComponentVariation(ped, 8, 15, 0, 2) -- Undershirt
+			SetPedComponentVariation(ped, 9, -1, 0, 2) -- Kevlar
+			SetPedComponentVariation(ped, 11, 68, 0, 2) -- Torso 2
+		else
+			ClearPedProp(ped, 0)
+			SetPedComponentVariation(ped, 3, 5, 0, 2) -- Arms
+			SetPedComponentVariation(ped, 4, 38, 0, 2) -- Leg
+			SetPedComponentVariation(ped, 5, -1, 0, 2) -- Parachute / bag
+			SetPedComponentVariation(ped, 6, 6, 10, 2) -- Shoes
+			SetPedComponentVariation(ped, 8, 15, 0, 2) -- Undershirt
+			SetPedComponentVariation(ped, 9, -1, 0, 2) -- Kevlar
+			SetPedComponentVariation(ped, 11, 5, 0, 2) -- Torso 2
+		end
+    end
 end
