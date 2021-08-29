@@ -174,7 +174,7 @@ AddEventHandler('prison:client:Leave', function()
 	end
 end)
 
-RegisterNetEvent('prison:client:UnjailPerson')
+RegisterNetEvent('prison:client:UnjailPerson') ---- We need someone to help write the code to return the clothes to the player after getting out of prison ---
 AddEventHandler('prison:client:UnjailPerson', function()
 	if jailTime > 0 then
 		TriggerServerEvent("prison:server:SetJailStatus", 0)
