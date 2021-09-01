@@ -63,15 +63,15 @@ Config.Locations = {
             coords = vector4(1697.106, 2525.558, 45.564, 187.208),
         },
         [5] = {
-            animation = "chair4",
+            animation = "sitchair4",
             coords = vector4(1673.084, 2519.823, 45.564, 229.542),
         },
         [6] = {
-            animation = "chair",
+            animation = "sitchair",
             coords = vector4(1666.029, 2511.367, 45.564, 233.888),
         },
         [7] = {
-            animation = "chair4",
+            animation = "sitchair4",
             coords = vector4(1691.229, 2509.635, 45.564, 52.432),
         },
         [8] = {
