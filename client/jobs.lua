@@ -1,6 +1,6 @@
-currentLocation = 0
-currentBlip = nil
-isWorking = false
+local currentLocation = 0
+local currentBlip = nil
+local isWorking = false
 
 Citizen.CreateThread(function()
     while true do 
