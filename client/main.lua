@@ -1,11 +1,11 @@
-isLoggedIn = false
-inJail = false
-jailTime = 0
-currentJob = "electrician"
-CellsBlip = nil
-TimeBlip = nil
-ShopBlip = nil
-PlayerJob = {}
+local isLoggedIn = false
+local inJail = false
+local jailTime = 0
+local currentJob = "electrician"
+local CellsBlip = nil
+local TimeBlip = nil
+local ShopBlip = nil
+local PlayerJob = {}
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded')
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
