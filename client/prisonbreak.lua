@@ -1,6 +1,5 @@
-prisonBreak = false
-currentGate = 0
-
+local prisonBreak = false
+local currentGate = 0
 local requiredItemsShowed = false
 local requiredItems = {}
 local inRange = false
