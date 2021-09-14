@@ -1,5 +1,5 @@
-local currentLocation = 0
-local currentBlip = nil
+local currentLocation = 0 
+currentBlip = nil
 local isWorking = false
 
 Citizen.CreateThread(function()
