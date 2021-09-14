@@ -129,7 +129,7 @@ end)
 RegisterNetEvent('prison:client:Leave')
 AddEventHandler('prison:client:Leave', function()
 	if jailTime > 0 then 
-		QBCore.Functions.Notify("You still have to... "..jailTime.." months..")
+		QBCore.Functions.Notify("You still have "..jailTime.." months left in your sentence")
 	else
 		jailTime = 0
 		TriggerServerEvent("prison:server:SetJailStatus", 0)
