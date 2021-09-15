@@ -265,81 +265,69 @@ function DrawText3D(x, y, z, text)
 end
 
 function JailIntro()
-    local Ped = PlayerPedId()
+    local ped = PlayerPedId()
     DoScreenFadeOut(10)
-    FreezeEntityPosition(Ped, true)
+    FreezeEntityPosition(ped, true)
     TriggerEvent('InteractSound_CL:PlayOnOne', 'handcuff', 1.0)   
-    SetPedComponentVariation(Ped, 1, -1, -1, -1)
-    ClearPedProp(Ped, 0)
+    SetPedComponentVariation(ped, 1, -1, -1, -1)
+    ClearPedProp(ped, 0)
     Citizen.Wait(1000)
-    SetEntityCoords(Ped,Config.Locations["takephotos"].coords.x, Config.Locations["takephotos"].coords.y, Config.Locations["takephotos"].coords.z)
-    SetEntityHeading(Ped,270.0)
+    SetEntityCoords(ped,Config.Locations["takephotos"].coords.x, Config.Locations["takephotos"].coords.y, Config.Locations["takephotos"].coords.z)
+    SetEntityHeading(ped,270.0)
     Citizen.Wait(1500) 
     DoScreenFadeIn(500)
     TriggerEvent('InteractSound_CL:PlayOnOne', 'photo', 0.4)
     Citizen.Wait(3000) 
     TriggerEvent('InteractSound_CL:PlayOnOne', 'photo', 0.4)
     Citizen.Wait(3000)     
-    SetEntityHeading(Ped,-355.74) 
+    SetEntityHeading(ped,-355.74) 
     TriggerEvent('InteractSound_CL:PlayOnOne', 'photo', 0.4)
     Citizen.Wait(3000)  
     TriggerEvent('InteractSound_CL:PlayOnOne', 'photo', 0.4)
     Citizen.Wait(3000)         
-    SetEntityHeading(Ped,170.74) 
+    SetEntityHeading(ped,170.74) 
     TriggerEvent('InteractSound_CL:PlayOnOne', 'photo', 0.4)
     Citizen.Wait(3000) 
      TriggerEvent('InteractSound_CL:PlayOnOne', 'photo', 0.4)
     Citizen.Wait(3000)       
-    SetEntityHeading(Ped,270.0)
+    SetEntityHeading(ped,270.0)
     Citizen.Wait(2000)
     DoScreenFadeOut(1100)   
     Citizen.Wait(2000)
-    TriggerEvent('InteractSound_CL:PlayOnOne', 'jaildoor', 1.0)
+    TriggerEvent('InteractSound_CL:PlayOnOne', 'jaildoor', 0.7)
 end
 
 function JailIclothes()
-	local ped = ped
+	local ped = PlayerPedId()
 	local model = GetEntityModel(ped)
 	local clothesrand = math.random(1,2)
-    if model == `mp_f_freemode_01` then
-		if clothesrand == 1 then
-			ClearPedProp(ped, 0)
-			SetPedComponentVariation(ped, 3, 3, 0, 2) -- Arms
-			SetPedComponentVariation(ped, 4, 38, 0, 2) -- Leg
-			SetPedComponentVariation(ped, 5, -1, 0, 2) -- Parachute / bag
-			SetPedComponentVariation(ped, 6, 27, 11, 2) -- Shoes
-			SetPedComponentVariation(ped, 8, 14, 0, 2) -- Undershirt
-			SetPedComponentVariation(ped, 9, -1, 0, 2) -- Kevlar
-			SetPedComponentVariation(ped, 11, 67, 0, 2) -- Torso 2
-		else
-			ClearPedProp(ped, 0)
-			SetPedComponentVariation(ped, 3, 14, 0, 2) -- Arms
-			SetPedComponentVariation(ped, 4, 38, 1, 2) -- Leg
-			SetPedComponentVariation(ped, 5, -1, 0, 2) -- Parachute / bag
-			SetPedComponentVariation(ped, 6, 27, 11, 2) -- Shoes
-			SetPedComponentVariation(ped, 8, 14, 0, 2) -- Undershirt
-			SetPedComponentVariation(ped, 9, -1, 0, 2) -- Kevlar
-			SetPedComponentVariation(ped, 11, 84, 2, 2) -- Torso 2
-		end
-	elseif model == `mp_m_freemode_01` then
-		if clothesrand == 1 then
-			ClearPedProp(ped, 0)
-			SetPedComponentVariation(ped, 3, 5, 0, 2) -- Arms
-			SetPedComponentVariation(ped, 4, 38, 1, 2) -- Leg
-			SetPedComponentVariation(ped, 5, -1, 0, 2) -- Parachute / bag
-			SetPedComponentVariation(ped, 6, 6, 10, 2) -- Shoes
-			SetPedComponentVariation(ped, 8, 15, 0, 2) -- Undershirt
-			SetPedComponentVariation(ped, 9, -1, 0, 2) -- Kevlar
-			SetPedComponentVariation(ped, 11, 68, 0, 2) -- Torso 2
-		else
-			ClearPedProp(ped, 0)
-			SetPedComponentVariation(ped, 3, 5, 0, 2) -- Arms
-			SetPedComponentVariation(ped, 4, 38, 0, 2) -- Leg
-			SetPedComponentVariation(ped, 5, -1, 0, 2) -- Parachute / bag
-			SetPedComponentVariation(ped, 6, 6, 10, 2) -- Shoes
-			SetPedComponentVariation(ped, 8, 15, 0, 2) -- Undershirt
-			SetPedComponentVariation(ped, 9, -1, 0, 2) -- Kevlar
-			SetPedComponentVariation(ped, 11, 5, 0, 2) -- Torso 2
-		end
+if model == `mp_f_freemode_01` then
+    ClearPedProp(ped, 0)
+    SetPedComponentVariation(ped, 6, 27, 11, 2) -- Shoes
+    SetPedComponentVariation(ped, 8, 14, 0, 2) -- Undershirt
+    SetPedComponentVariation(ped, 5, -1, 0, 2) -- Parachute / bag
+    SetPedComponentVariation(ped, 9, -1, 0, 2) -- Kevlar
+    if clothesrand == 1 then
+        SetPedComponentVariation(ped, 3, 3, 0, 2) -- Arms
+        SetPedComponentVariation(ped, 4, 38, 0, 2) -- Leg
+        SetPedComponentVariation(ped, 11, 67, 0, 2) -- Torso 2
+    else
+        SetPedComponentVariation(ped, 3, 14, 0, 2) -- Arms
+        SetPedComponentVariation(ped, 4, 38, 1, 2) -- Leg
+        SetPedComponentVariation(ped, 11, 84, 2, 2) -- Torso 2
+    end
+elseif model == `mp_m_freemode_01` then
+    ClearPedProp(ped, 0)
+    SetPedComponentVariation(ped, 3, 5, 0, 2) -- Arms
+    SetPedComponentVariation(ped, 6, 6, 10, 2) -- Shoes
+    SetPedComponentVariation(ped, 8, 15, 0, 2) -- Undershirt
+    SetPedComponentVariation(ped, 5, -1, 0, 2) -- Parachute / bag
+    SetPedComponentVariation(ped, 9, -1, 0, 2) -- Kevlar
+    if clothesrand == 1 then
+        SetPedComponentVariation(ped, 4, 38, 1, 2) -- Leg
+        SetPedComponentVariation(ped, 11, 68, 0, 2) -- Torso 2
+    else
+        SetPedComponentVariation(ped, 4, 38, 0, 2) -- Leg
+        SetPedComponentVariation(ped, 11, 5, 0, 2) -- Torso 2
     end
 end
