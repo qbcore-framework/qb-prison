@@ -172,7 +172,6 @@ AddEventHandler('prison:client:Leave', function()
 	else
 		jailTime = 0
 		TriggerServerEvent("prison:server:SetJailStatus", 0)
-		TriggerServerEvent("prison:server:GiveJailItems")
 		TriggerEvent("chatMessage", "SYSTEM", "warning", "you've received your property back..")
 		inJail = false
 		RemoveBlip(currentBlip)
