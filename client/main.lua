@@ -1,7 +1,7 @@
 isLoggedIn = false
 inJail = false
 jailTime = 0 
-currentJob = "electrician"
+currentJob = nil
 CellsBlip = nil
 TimeBlip = nil
 ShopBlip = nil
@@ -112,7 +112,7 @@ AddEventHandler('prison:client:Enter', function(time)
 
 	inJail = true
 	jailTime = time
-	currentJob = "electrician"
+	currentJob = Config.Locations.jobs[math.random(1, #Config.Locations.jobs)]
 	TriggerServerEvent("prison:server:SetJailStatus", jailTime)
 	TriggerServerEvent("prison:server:SaveJailItems", jailTime)
 
