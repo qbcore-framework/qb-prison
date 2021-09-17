@@ -70,9 +70,27 @@ Citizen.CreateThread(function()
 						TriggerEvent("prison:client:Leave")
 					end
 				elseif #(pos - vector3(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z)) < 2.5 then
-					DrawText3D(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z, "Check time")
+					if jailTime > 1 then
+						DrawText3D(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z, 'Waiting: ~g~'..jailTime.. ' months remaining')
+						elseif jailTime > 0 then
+						DrawText3D(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z, 'Waiting: ~g~1 month left!')
+					else
+						DrawText3D(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z, "Time's up!")
+					end
+				end
+				
+				
+				if #(pos - vector3(Config.Locations["reclaim"].coords.x, Config.Locations["reclaim"].coords.y, Config.Locations["reclaim"].coords.z)) < 1.5 then
+					DrawText3D(Config.Locations["reclaim"].coords.x, Config.Locations["reclaim"].coords.y, Config.Locations["reclaim"].coords.z, "~g~E~w~ - Re-claim Possessions")
+					if IsControlJustReleased(0, 38) then
+						TriggerServerEvent("prison:server:GiveJailItems")
+						QBCore.Functions.Notify("You have reclaimed your possessions", "success")
+					end
+				elseif #(pos - vector3(Config.Locations["reclaim"].coords.x, Config.Locations["reclaim"].coords.y, Config.Locations["reclaim"].coords.z)) < 2.5 then
+					DrawText3D(Config.Locations["reclaim"].coords.x, Config.Locations["reclaim"].coords.y, Config.Locations["reclaim"].coords.z, "reclaim Possessions")
 				end  
-
+				
+				
 				if #(pos - vector3(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z)) < 1.5 then
 					DrawText3D(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z, "~g~E~w~ - Canteen")
 					if IsControlJustReleased(0, 38) then
@@ -96,6 +114,27 @@ Citizen.CreateThread(function()
 	end
 end)
 
+Citizen.CreateThread(function()
+	while true do 
+		Citizen.Wait(1)
+		if isLoggedIn then
+			if not inJail then
+				local pos = GetEntityCoords(PlayerPedId())
+				if #(pos - vector3(Config.Locations["reclaim"].coords.x, Config.Locations["reclaim"].coords.y, Config.Locations["reclaim"].coords.z)) < 1.5 then
+					DrawText3D(Config.Locations["reclaim"].coords.x, Config.Locations["reclaim"].coords.y, Config.Locations["reclaim"].coords.z, "~g~E~w~ - Re-claim Possessions")
+					if IsControlJustReleased(0, 38) then
+						TriggerServerEvent("prison:server:GiveJailItems")
+						QBCore.Functions.Notify("You have reclaimed your possessions", "success")
+					end
+				elseif #(pos - vector3(Config.Locations["reclaim"].coords.x, Config.Locations["reclaim"].coords.y, Config.Locations["reclaim"].coords.z)) < 2.5 then
+					DrawText3D(Config.Locations["reclaim"].coords.x, Config.Locations["reclaim"].coords.y, Config.Locations["reclaim"].coords.z, "reclaim Possessions")
+				end 
+			end
+		else
+			Citizen.Wait(5000)
+		end
+	end
+end)
 RegisterNetEvent('prison:client:Enter')
 AddEventHandler('prison:client:Enter', function(time)
 	QBCore.Functions.Notify("You're in jail for "..time.." months..", "error")
