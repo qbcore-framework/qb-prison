@@ -30,7 +30,6 @@ RegisterServerEvent('prison:server:GiveJailItems')
 AddEventHandler('prison:server:GiveJailItems', function()
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    Player.Functions.ClearInventory()
     Citizen.Wait(1000)
     for k, v in pairs(Player.PlayerData.metadata["jailitems"]) do
         Player.Functions.AddItem(v.name, v.amount, false, v.info)

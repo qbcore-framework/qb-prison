@@ -71,7 +71,9 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(7)
+        local src = source
 		local pos = GetEntityCoords(PlayerPedId(), true)
+        local Player = QBCore.Functions.GetPlayer(src)
         if #(pos - vector3(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y, Config.Locations["middle"].coords.z)) > 200 and inJail then
 			inJail = false
             jailTime = 0
@@ -84,6 +86,7 @@ Citizen.CreateThread(function()
             ShopBlip = nil
             TriggerServerEvent("prison:server:SecurityLockdown")
             TriggerEvent('prison:client:PrisonBreakAlert')
+            Player.Functions.SetMetaData("jailitems", {})
             QBCore.Functions.Notify("You escaped... Get the hell out of here.!", "error")
 		end
 	end
