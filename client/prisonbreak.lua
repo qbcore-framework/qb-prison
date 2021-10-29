@@ -84,6 +84,8 @@ Citizen.CreateThread(function()
             ShopBlip = nil
             TriggerServerEvent("prison:server:SecurityLockdown")
             TriggerEvent('prison:client:PrisonBreakAlert')
+            TriggerServerEvent("prison:server:SetJailStatus", 0)
+            TriggerServerEvent("QBCore:Server:SetMetaData", "jailitems", {})
             QBCore.Functions.Notify("You escaped... Get the hell out of here.!", "error")
 		end
 	end
