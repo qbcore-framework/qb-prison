@@ -1,6 +1,6 @@
 isLoggedIn = false
 inJail = false
-jailTime = 0 
+jailTime = 0
 currentJob = "electrician"
 CellsBlip = nil
 TimeBlip = nil
@@ -70,8 +70,14 @@ Citizen.CreateThread(function()
 						TriggerEvent("prison:client:Leave")
 					end
 				elseif #(pos - vector3(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z)) < 2.5 then
-					DrawText3D(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z, "Check time")
-				end  
+					if jailTime > 1 then
+						DrawText3D(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z, 'Waiting: ~g~'..jailTime.. ' months remaining')
+					elseif jailTime > 0 then
+						DrawText3D(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z, 'Waiting: ~g~1 month left!')
+					else
+						DrawText3D(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z, "Time's up!")
+					end
+				end
 
 				if #(pos - vector3(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z)) < 1.5 then
 					DrawText3D(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z, "~g~E~w~ - Canteen")
@@ -99,7 +105,10 @@ end)
 RegisterNetEvent('prison:client:Enter')
 AddEventHandler('prison:client:Enter', function(time)
 	QBCore.Functions.Notify("You're in jail for "..time.." months..", "error")
-	TriggerEvent("chatMessage", "SYSTEM", "warning", "Your property has been seized, you'll get everything back when your time is up..")
+	TriggerEvent("chatMessage", "SYSTEM", "warning", "DOC | Your property has been seized, you'll get everything back when your time is up..")
+	JailIclothes()
+	JailIntro()
+	FreezeEntityPosition(PlayerPedId(), false)	
 	DoScreenFadeOut(500)
 	while not IsScreenFadedOut() do
 		Citizen.Wait(10)
@@ -109,7 +118,7 @@ AddEventHandler('prison:client:Enter', function(time)
 	SetEntityHeading(PlayerPedId(), RandomStartPosition.coords.w)
 	Citizen.Wait(500)
 	TriggerEvent('animations:client:EmoteCommandStart', {RandomStartPosition.animation})
-
+	FreezeEntityPosition(PlayerPedId(), false)
 	inJail = true
 	jailTime = time
 	currentJob = "electrician"
@@ -124,6 +133,20 @@ AddEventHandler('prison:client:Enter', function(time)
 
 	DoScreenFadeIn(1000)
 	QBCore.Functions.Notify("Do some work for sentence reduction, instant job: "..Config.Jobs[currentJob])
+	    minutes = tonumber(time)
+
+	    local timer = minutes
+	    while inJail do
+		Citizen.Wait(60000)
+
+		timer = timer - 1
+		if timer > 0 then
+		    TriggerEvent("chatMessage", "SYSTEM", "warning", 'DOC | You have ' .. timer .. ' months remaining')
+		else
+		    inJail = false
+		end
+	    end
+		
 end)
 
 RegisterNetEvent('prison:client:Leave')
@@ -134,7 +157,7 @@ AddEventHandler('prison:client:Leave', function()
 		jailTime = 0
 		TriggerServerEvent("prison:server:SetJailStatus", 0)
 		TriggerServerEvent("prison:server:GiveJailItems")
-		TriggerEvent("chatMessage", "SYSTEM", "warning", "you've received your property back..")
+		TriggerEvent("chatMessage", "SYSTEM", "warning", "DOC | you've received your property back..")
 		inJail = false
 		RemoveBlip(currentBlip)
 		RemoveBlip(CellsBlip)
@@ -162,7 +185,7 @@ AddEventHandler('prison:client:UnjailPerson', function()
 	if jailTime > 0 then
 		TriggerServerEvent("prison:server:SetJailStatus", 0)
 		TriggerServerEvent("prison:server:GiveJailItems")
-		TriggerEvent("chatMessage", "SYSTEM", "warning", "You got your property back..")
+		TriggerEvent("chatMessage", "SYSTEM", "warning", "DOC | You got your property back..")
 		inJail = false
 		RemoveBlip(currentBlip)
 		RemoveBlip(CellsBlip)
@@ -178,9 +201,7 @@ AddEventHandler('prison:client:UnjailPerson', function()
 		end
 		SetEntityCoords(PlayerPedId(), Config.Locations["outside"].coords.x, Config.Locations["outside"].coords.y, Config.Locations["outside"].coords.z, 0, 0, 0, false)
 		SetEntityHeading(PlayerPedId(), Config.Locations["outside"].coords.w)
-
 		Citizen.Wait(500)
-
 		DoScreenFadeIn(1000)
 	end
 end)
@@ -245,4 +266,73 @@ function DrawText3D(x, y, z, text)
     local factor = (string.len(text)) / 370
     DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
     ClearDrawOrigin()
+end
+
+function JailIntro()
+    local ped = PlayerPedId()
+    DoScreenFadeOut(10)
+    FreezeEntityPosition(ped, true)
+    TriggerEvent('InteractSound_CL:PlayOnOne', 'handcuff', 1.0)   
+    SetPedComponentVariation(ped, 1, -1, -1, -1)
+    ClearPedProp(ped, 0)
+    Citizen.Wait(1000)
+    SetEntityCoords(ped,Config.Locations["takephotos"].coords.x, Config.Locations["takephotos"].coords.y, Config.Locations["takephotos"].coords.z)
+    SetEntityHeading(ped,270.0)
+    Citizen.Wait(1500) 
+    DoScreenFadeIn(500)
+    TriggerEvent('InteractSound_CL:PlayOnOne', 'photo', 0.4)
+    Citizen.Wait(3000) 
+    TriggerEvent('InteractSound_CL:PlayOnOne', 'photo', 0.4)
+    Citizen.Wait(3000)     
+    SetEntityHeading(ped,-355.74) 
+    TriggerEvent('InteractSound_CL:PlayOnOne', 'photo', 0.4)
+    Citizen.Wait(3000)  
+    TriggerEvent('InteractSound_CL:PlayOnOne', 'photo', 0.4)
+    Citizen.Wait(3000)         
+    SetEntityHeading(ped,170.74) 
+    TriggerEvent('InteractSound_CL:PlayOnOne', 'photo', 0.4)
+    Citizen.Wait(3000) 
+     TriggerEvent('InteractSound_CL:PlayOnOne', 'photo', 0.4)
+    Citizen.Wait(3000)       
+    SetEntityHeading(ped,270.0)
+    Citizen.Wait(2000)
+    DoScreenFadeOut(1100)   
+    Citizen.Wait(2000)
+    TriggerEvent('InteractSound_CL:PlayOnOne', 'jaildoor', 0.7)
+end
+
+function JailIclothes()
+	local ped = PlayerPedId()
+	local model = GetEntityModel(ped)
+	local clothesrand = math.random(1,2)
+	if model == `mp_f_freemode_01` then
+		ClearPedProp(ped, 0)
+		SetPedComponentVariation(ped, 6, 27, 11, 2) -- Shoes
+		SetPedComponentVariation(ped, 8, 14, 0, 2) -- Undershirt
+		SetPedComponentVariation(ped, 5, -1, 0, 2) -- Parachute / bag
+		SetPedComponentVariation(ped, 9, -1, 0, 2) -- Kevlar
+		if clothesrand == 1 then
+			SetPedComponentVariation(ped, 3, 3, 0, 2) -- Arms
+			SetPedComponentVariation(ped, 4, 38, 0, 2) -- Leg
+			SetPedComponentVariation(ped, 11, 67, 0, 2) -- Torso 2
+		else
+			SetPedComponentVariation(ped, 3, 14, 0, 2) -- Arms
+			SetPedComponentVariation(ped, 4, 38, 1, 2) -- Leg
+			SetPedComponentVariation(ped, 11, 84, 2, 2) -- Torso 2
+		end
+	elseif model == `mp_m_freemode_01` then
+		ClearPedProp(ped, 0)
+		SetPedComponentVariation(ped, 3, 5, 0, 2) -- Arms
+		SetPedComponentVariation(ped, 6, 6, 10, 2) -- Shoes
+		SetPedComponentVariation(ped, 8, 15, 0, 2) -- Undershirt
+		SetPedComponentVariation(ped, 5, -1, 0, 2) -- Parachute / bag
+		SetPedComponentVariation(ped, 9, -1, 0, 2) -- Kevlar
+		if clothesrand == 1 then
+			SetPedComponentVariation(ped, 4, 38, 1, 2) -- Leg
+			SetPedComponentVariation(ped, 11, 68, 0, 2) -- Torso 2
+		else
+			SetPedComponentVariation(ped, 4, 38, 0, 2) -- Leg
+			SetPedComponentVariation(ped, 11, 5, 0, 2) -- Torso 2
+		end
+	end
 end
