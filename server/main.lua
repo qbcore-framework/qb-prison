@@ -1,3 +1,5 @@
+local QBCore = exports['qb-core']:GetCoreObject()
+
 local AlarmActivated = false
 
 RegisterServerEvent('prison:server:SetJailStatus')
@@ -14,11 +16,10 @@ AddEventHandler('prison:server:SetJailStatus', function(jailTime)
 end)
 
 RegisterServerEvent('prison:server:SaveJailItems')
-AddEventHandler('prison:server:SaveJailItems', function(jailTime)
+AddEventHandler('prison:server:SaveJailItems', function()
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    local amount = 10
-    if Player.PlayerData.metadata["jailitems"] == nil or next(Player.PlayerData.metadata["jailitems"]) == nil then 
+    if Player.PlayerData.metadata["jailitems"] == nil or next(Player.PlayerData.metadata["jailitems"]) == nil then
         Player.Functions.SetMetaData("jailitems", Player.PlayerData.items)
         Player.Functions.AddMoney('cash', 80)
         Citizen.Wait(2000)
@@ -40,11 +41,10 @@ end)
 
 RegisterServerEvent('prison:server:SecurityLockdown')
 AddEventHandler('prison:server:SecurityLockdown', function()
-    local src = source
     TriggerClientEvent("prison:client:SetLockDown", -1, true)
     for k, v in pairs(QBCore.Functions.GetPlayers()) do
         local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then 
+        if Player ~= nil then
             if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
                 TriggerClientEvent("prison:client:PrisonBreakAlert", v)
             end
@@ -54,12 +54,11 @@ end)
 
 RegisterServerEvent('prison:server:SetGateHit')
 AddEventHandler('prison:server:SetGateHit', function(key)
-    local src = source
     TriggerClientEvent("prison:client:SetGateHit", -1, key, true)
     if math.random(1, 100) <= 50 then
         for k, v in pairs(QBCore.Functions.GetPlayers()) do
             local Player = QBCore.Functions.GetPlayer(v)
-            if Player ~= nil then 
+            if Player ~= nil then
                 if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
                     TriggerClientEvent("prison:client:PrisonBreakAlert", v)
                 end
