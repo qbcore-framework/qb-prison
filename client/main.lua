@@ -1,6 +1,7 @@
-isLoggedIn = false
+local QBCore = exports['qb-core']:GetCoreObject()
+
 inJail = false
-jailTime = 0 
+jailTime = 0
 currentJob = "electrician"
 CellsBlip = nil
 TimeBlip = nil
@@ -9,7 +10,6 @@ PlayerJob = {}
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded')
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
-	isLoggedIn = true
 	QBCore.Functions.GetPlayerData(function(PlayerData)
 		if PlayerData.metadata["injail"] > 0 then
 			TriggerEvent("prison:client:Enter", PlayerData.metadata["injail"])
@@ -32,7 +32,6 @@ end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerUnload')
 AddEventHandler('QBCore:Client:OnPlayerUnload', function()
-	isLoggedIn = false
 	inJail = false
 	currentJob = nil
 	RemoveBlip(currentBlip)
@@ -40,9 +39,9 @@ end)
 
 Citizen.CreateThread(function()
     TriggerEvent('prison:client:JailAlarm', false)
-	while true do 
+	while true do
 		Citizen.Wait(7)
-		if jailTime > 0 and inJail then 
+		if jailTime > 0 and inJail then
 			Citizen.Wait(1000 * 60)
 			if jailTime > 0 and inJail then
 				jailTime = jailTime - 1
@@ -59,9 +58,9 @@ Citizen.CreateThread(function()
 end)
 
 Citizen.CreateThread(function()
-	while true do 
+	while true do
 		Citizen.Wait(1)
-		if isLoggedIn then
+		if LocalPlayer.state.isLoggedIn then
 			if inJail then
 				local pos = GetEntityCoords(PlayerPedId())
 				if #(pos - vector3(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z)) < 1.5 then
@@ -71,7 +70,7 @@ Citizen.CreateThread(function()
 					end
 				elseif #(pos - vector3(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z)) < 2.5 then
 					DrawText3D(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z, "Check time")
-				end  
+				end
 
 				if #(pos - vector3(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z)) < 1.5 then
 					DrawText3D(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z, "~g~E~w~ - Canteen")
@@ -88,7 +87,7 @@ Citizen.CreateThread(function()
 					DrawMarker(2, Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.2, 255, 55, 22, 222, false, false, false, 1, false, false, false)
 				elseif #(pos - vector3(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z)) < 10 then
 					DrawMarker(2, Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.2, 255, 55, 22, 222, false, false, false, 1, false, false, false)
-				end  
+				end
 			end
 		else
 			Citizen.Wait(5000)
@@ -119,7 +118,7 @@ AddEventHandler('prison:client:Enter', function(time)
 	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
 
 	CreateCellsBlip()
-	
+
 	Citizen.Wait(2000)
 
 	DoScreenFadeIn(1000)
@@ -128,7 +127,7 @@ end)
 
 RegisterNetEvent('prison:client:Leave')
 AddEventHandler('prison:client:Leave', function()
-	if jailTime > 0 then 
+	if jailTime > 0 then
 		QBCore.Functions.Notify("You still have to... "..jailTime.." months..")
 	else
 		jailTime = 0

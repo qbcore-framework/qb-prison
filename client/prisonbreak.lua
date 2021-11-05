@@ -1,4 +1,5 @@
-local prisonBreak = false
+local QBCore = exports['qb-core']:GetCoreObject()
+
 local currentGate = 0
 local requiredItemsShowed = false
 local requiredItems = {}
@@ -29,11 +30,11 @@ Citizen.CreateThread(function()
         [1] = {name = QBCore.Shared.Items["electronickit"]["name"], image = QBCore.Shared.Items["electronickit"]["image"]},
         [2] = {name = QBCore.Shared.Items["gatecrack"]["name"], image = QBCore.Shared.Items["gatecrack"]["image"]},
     }
-    while true do 
+    while true do
         Citizen.Wait(5)
         inRange = false
         currentGate = 0
-        if isLoggedIn and QBCore ~= nil then
+        if LocalPlayer.state.isLoggedIn then
             if PlayerJob.name ~= "police" then
                 local pos = GetEntityCoords(PlayerPedId())
                 for k, v in pairs(Gates) do
@@ -93,9 +94,9 @@ end)
 
 RegisterNetEvent('electronickit:UseElectronickit')
 AddEventHandler('electronickit:UseElectronickit', function()
-    if currentGate ~= 0 and not securityLockdown and not Gates[currentGate].hit then 
+    if currentGate ~= 0 and not securityLockdown and not Gates[currentGate].hit then
         QBCore.Functions.TriggerCallback('QBCore:HasItem', function(result)
-            if result then 
+            if result then
                 TriggerEvent('inventory:client:requiredItems', requiredItems, false)
                 QBCore.Functions.Progressbar("hack_gate", "Electronic kit plug in..", math.random(5000, 10000), false, true, {
                     disableMovement = true,
@@ -124,7 +125,7 @@ end)
 RegisterNetEvent('prison:client:SetLockDown')
 AddEventHandler('prison:client:SetLockDown', function(isLockdown)
     securityLockdown = isLockdown
-    if securityLockDown and inJail then
+    if securityLockdown and inJail then
         TriggerEvent("chatMessage", "HOSTAGE", "error", "Highest security level is active, stay with the cell blocks!")
     end
 end)
@@ -161,7 +162,7 @@ AddEventHandler('prison:client:PrisonBreakAlert', function()
     PlaySound(-1, "Lose_1st", "GTAO_FM_Events_Soundset", 0, 0, 1)
     Citizen.Wait(100)
     PlaySoundFrontend( -1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", 1 )
-    Citizen.Wait((1000 * 60 * 5))   
+    Citizen.Wait((1000 * 60 * 5))
     RemoveBlip(BreakBlip)
 end)
 
@@ -188,7 +189,7 @@ AddEventHandler('prison:client:JailAlarm', function(toggle)
 
         RefreshInterior(alarmIpl)
         EnableInteriorProp(alarmIpl, "prison_alarm")
-    
+
         Citizen.CreateThread(function()
             while not PrepareAlarm("PRISON_ALARMS") do
                 Citizen.Wait(100)
@@ -197,10 +198,10 @@ AddEventHandler('prison:client:JailAlarm', function(toggle)
         end)
     else
         local alarmIpl = GetInteriorAtCoordsWithType(1787.004,2593.1984,45.7978, "int_prison_main")
- 
+
         RefreshInterior(alarmIpl)
         DisableInteriorProp(alarmIpl, "prison_alarm")
-    
+
         Citizen.CreateThread(function()
             while not PrepareAlarm("PRISON_ALARMS") do
                 Citizen.Wait(100)

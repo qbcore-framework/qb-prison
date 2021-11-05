@@ -1,11 +1,13 @@
-local currentLocation = 0 
+local QBCore = exports['qb-core']:GetCoreObject()
+
+local currentLocation = 0
 currentBlip = nil
 local isWorking = false
 
 Citizen.CreateThread(function()
-    while true do 
+    while true do
         Citizen.Wait(1)
-        if inJail and currentJob ~= nil then 
+        if inJail and currentJob ~= nil then
             if currentLocation ~= 0 then
                 if not DoesBlipExist(currentBlip) then
                     CreateJobBlip()
@@ -71,7 +73,7 @@ function CreateJobBlip()
         SetBlipScale  (currentBlip, 0.8)
         SetBlipAsShortRange(currentBlip, true)
         SetBlipColour(currentBlip, 1)
-    
+
         BeginTextCommandSetBlipName("STRING")
         AddTextComponentSubstringPlayerName(Config.Jobs[currentJob])
         EndTextCommandSetBlipName(currentBlip)
