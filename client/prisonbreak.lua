@@ -24,14 +24,14 @@ local Gates = {
     }
 }
 
-Citizen.CreateThread(function()
-    Citizen.Wait(500)
+CreateThread(function()
+    Wait(500)
     requiredItems = {
         [1] = {name = QBCore.Shared.Items["electronickit"]["name"], image = QBCore.Shared.Items["electronickit"]["image"]},
         [2] = {name = QBCore.Shared.Items["gatecrack"]["name"], image = QBCore.Shared.Items["gatecrack"]["image"]},
     }
     while true do
-        Citizen.Wait(5)
+        Wait(5)
         inRange = false
         currentGate = 0
         if LocalPlayer.state.isLoggedIn then
@@ -58,20 +58,20 @@ Citizen.CreateThread(function()
                         requiredItemsShowed = false
                         TriggerEvent('inventory:client:requiredItems', requiredItems, false)
                     end
-                    Citizen.Wait(1000)
+                    Wait(1000)
                 end
             else
-                Citizen.Wait(1000)
+                Wait(1000)
             end
         else
-            Citizen.Wait(5000)
+            Wait(5000)
         end
     end
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(7)
+		Wait(7)
 		local pos = GetEntityCoords(PlayerPedId(), true)
         if #(pos - vector3(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y, Config.Locations["middle"].coords.z)) > 200 and inJail then
 			inJail = false
@@ -92,8 +92,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
-RegisterNetEvent('electronickit:UseElectronickit')
-AddEventHandler('electronickit:UseElectronickit', function()
+RegisterNetEvent('electronickit:UseElectronickit', function()
     if currentGate ~= 0 and not securityLockdown and not Gates[currentGate].hit then
         QBCore.Functions.TriggerCallback('QBCore:HasItem', function(result)
             if result then
@@ -122,16 +121,14 @@ AddEventHandler('electronickit:UseElectronickit', function()
     end
 end)
 
-RegisterNetEvent('prison:client:SetLockDown')
-AddEventHandler('prison:client:SetLockDown', function(isLockdown)
+RegisterNetEvent('prison:client:SetLockDown', function(isLockdown)
     securityLockdown = isLockdown
     if securityLockdown and inJail then
         TriggerEvent("chatMessage", "HOSTAGE", "error", "Highest security level is active, stay with the cell blocks!")
     end
 end)
 
-RegisterNetEvent('prison:client:PrisonBreakAlert')
-AddEventHandler('prison:client:PrisonBreakAlert', function()
+RegisterNetEvent('prison:client:PrisonBreakAlert', function()
     -- TriggerEvent("chatMessage", "ALERT", "error", "Attentie alle eenheden! Poging tot uitbraak in de gevangenis!")
     TriggerEvent('qb-policealerts:client:AddPoliceAlert', {
         timeOut = 10000,
@@ -156,18 +153,17 @@ AddEventHandler('prison:client:PrisonBreakAlert', function()
 	SetBlipColour(BreakBlip, 3)
 	PulseBlip(BreakBlip)
     PlaySound(-1, "Lose_1st", "GTAO_FM_Events_Soundset", 0, 0, 1)
-    Citizen.Wait(100)
+    Wait(100)
     PlaySoundFrontend( -1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", 1 )
-    Citizen.Wait(100)
+    Wait(100)
     PlaySound(-1, "Lose_1st", "GTAO_FM_Events_Soundset", 0, 0, 1)
-    Citizen.Wait(100)
+    Wait(100)
     PlaySoundFrontend( -1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", 1 )
-    Citizen.Wait((1000 * 60 * 5))
+    Wait((1000 * 60 * 5))
     RemoveBlip(BreakBlip)
 end)
 
-RegisterNetEvent('prison:client:SetGateHit')
-AddEventHandler('prison:client:SetGateHit', function(key, isHit)
+RegisterNetEvent('prison:client:SetGateHit', function(key, isHit)
     Gates[key].hit = isHit
 end)
 
@@ -182,17 +178,16 @@ function OnHackDone(success, timeremaining)
 	end
 end
 
-RegisterNetEvent('prison:client:JailAlarm')
-AddEventHandler('prison:client:JailAlarm', function(toggle)
+RegisterNetEvent('prison:client:JailAlarm', function(toggle)
     if toggle then
         local alarmIpl = GetInteriorAtCoordsWithType(1787.004,2593.1984,45.7978, "int_prison_main")
 
         RefreshInterior(alarmIpl)
         EnableInteriorProp(alarmIpl, "prison_alarm")
 
-        Citizen.CreateThread(function()
+        CreateThread(function()
             while not PrepareAlarm("PRISON_ALARMS") do
-                Citizen.Wait(100)
+                Wait(100)
             end
             StartAlarm("PRISON_ALARMS", true)
         end)
@@ -202,9 +197,9 @@ AddEventHandler('prison:client:JailAlarm', function(toggle)
         RefreshInterior(alarmIpl)
         DisableInteriorProp(alarmIpl, "prison_alarm")
 
-        Citizen.CreateThread(function()
+        CreateThread(function()
             while not PrepareAlarm("PRISON_ALARMS") do
-                Citizen.Wait(100)
+                Wait(100)
             end
             StopAllAlarms(true)
         end)
