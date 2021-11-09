@@ -1,8 +1,51 @@
-local QBCore = exports['qb-core']:GetCoreObject()
-
 local currentLocation = 0
 currentBlip = nil
 local isWorking = false
+
+-- Functions
+
+local function CreateJobBlip()
+    if currentLocation ~= 0 then
+        if DoesBlipExist(currentBlip) then
+            RemoveBlip(currentBlip)
+        end
+        currentBlip = AddBlipForCoord(Config.Locations.jobs[currentJob][currentLocation].coords.x, Config.Locations.jobs[currentJob][currentLocation].coords.y, Config.Locations.jobs[currentJob][currentLocation].coords.z)
+
+        SetBlipSprite (currentBlip, 402)
+        SetBlipDisplay(currentBlip, 4)
+        SetBlipScale  (currentBlip, 0.8)
+        SetBlipAsShortRange(currentBlip, true)
+        SetBlipColour(currentBlip, 1)
+
+        BeginTextCommandSetBlipName("STRING")
+        AddTextComponentSubstringPlayerName(Config.Jobs[currentJob])
+        EndTextCommandSetBlipName(currentBlip)
+
+        local Chance = math.random(100)
+        local Odd = math.random(100)
+        if Chance == Odd then
+            TriggerServerEvent('QBCore:Server:AddItem', 'phone', 1)
+            TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["phone"], "add")
+            QBCore.Functions.Notify("You found a phone..", "success")
+        end
+    end
+end
+
+local function JobDone()
+    if math.random(1, 100) <= 50 then
+        QBCore.Functions.Notify("You've worked some time off your sentence")
+        jailTime = jailTime - math.random(1, 2)
+    end
+    local newLocation = math.random(1, #Config.Locations.jobs[currentJob])
+    while (newLocation == currentLocation) do
+        Wait(100)
+        newLocation = math.random(1, #Config.Locations.jobs[currentJob])
+    end
+    currentLocation = newLocation
+    CreateJobBlip()
+end
+
+-- Threads
 
 CreateThread(function()
     while true do
@@ -46,44 +89,3 @@ CreateThread(function()
         end
     end
 end)
-
-function JobDone()
-    if math.random(1, 100) <= 50 then
-        QBCore.Functions.Notify("You've worked some time off your sentence")
-        jailTime = jailTime - math.random(1, 2)
-    end
-    local newLocation = math.random(1, #Config.Locations.jobs[currentJob])
-    while (newLocation == currentLocation) do
-        Wait(100)
-        newLocation = math.random(1, #Config.Locations.jobs[currentJob])
-    end
-    currentLocation = newLocation
-    CreateJobBlip()
-end
-
-function CreateJobBlip()
-    if currentLocation ~= 0 then
-        if DoesBlipExist(currentBlip) then
-            RemoveBlip(currentBlip)
-        end
-        currentBlip = AddBlipForCoord(Config.Locations.jobs[currentJob][currentLocation].coords.x, Config.Locations.jobs[currentJob][currentLocation].coords.y, Config.Locations.jobs[currentJob][currentLocation].coords.z)
-
-        SetBlipSprite (currentBlip, 402)
-        SetBlipDisplay(currentBlip, 4)
-        SetBlipScale  (currentBlip, 0.8)
-        SetBlipAsShortRange(currentBlip, true)
-        SetBlipColour(currentBlip, 1)
-
-        BeginTextCommandSetBlipName("STRING")
-        AddTextComponentSubstringPlayerName(Config.Jobs[currentJob])
-        EndTextCommandSetBlipName(currentBlip)
-
-        local Chance = math.random(100)
-        local Odd = math.random(100)
-        if Chance == Odd then
-            TriggerServerEvent('QBCore:Server:AddItem', 'phone', 1)
-            TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["phone"], "add")
-            QBCore.Functions.Notify("You found a phone..", "success")
-        end
-    end
-end
