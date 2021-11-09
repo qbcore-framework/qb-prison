@@ -4,9 +4,9 @@ local currentLocation = 0
 currentBlip = nil
 local isWorking = false
 
-Citizen.CreateThread(function()
+CreateThread(function()
     while true do
-        Citizen.Wait(1)
+        Wait(1)
         if inJail and currentJob ~= nil then
             if currentLocation ~= 0 then
                 if not DoesBlipExist(currentBlip) then
@@ -42,7 +42,7 @@ Citizen.CreateThread(function()
                 CreateJobBlip()
             end
         else
-            Citizen.Wait(5000)
+            Wait(5000)
         end
     end
 end)
@@ -54,7 +54,7 @@ function JobDone()
     end
     local newLocation = math.random(1, #Config.Locations.jobs[currentJob])
     while (newLocation == currentLocation) do
-        Citizen.Wait(100)
+        Wait(100)
         newLocation = math.random(1, #Config.Locations.jobs[currentJob])
     end
     currentLocation = newLocation
