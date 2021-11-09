@@ -20,6 +20,7 @@ RegisterNetEvent('prison:server:SaveJailItems', function()
     if Player.PlayerData.metadata["jailitems"] == nil or next(Player.PlayerData.metadata["jailitems"]) == nil then
         Player.Functions.SetMetaData("jailitems", Player.PlayerData.items)
         Player.Functions.AddMoney('cash', 80)
+        TriggerEvent('qb-bossmenu:server:removeAccountMoney', "police", 80)		
         Wait(2000)
         Player.Functions.ClearInventory()
     end
