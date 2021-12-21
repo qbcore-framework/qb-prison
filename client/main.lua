@@ -68,6 +68,12 @@ local function CreateCellsBlip()
 	EndTextCommandSetBlipName(ShopBlip)
 end
 
+local function HasInJail()
+    return inJail
+end
+
+exports('HasInJail', HasInJail)
+
 -- Events
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
