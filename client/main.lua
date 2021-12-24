@@ -235,3 +235,9 @@ CreateThread(function()
 		end
 	end
 end)
+
+local function InJail()
+    return inJail
+end
+
+exports('InJail', InJail)
