@@ -206,6 +206,8 @@ CreateThread(function()
             TriggerServerEvent("prison:server:SetJailStatus", 0)
             TriggerServerEvent("QBCore:Server:SetMetaData", "jailitems", {})
             QBCore.Functions.Notify("You escaped... Get the hell out of here.!", "error")
+        else
+            Wait(1000)
 		end
 	end
 end)
