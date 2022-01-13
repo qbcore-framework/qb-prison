@@ -57,10 +57,10 @@ RegisterNetEvent('electronickit:UseElectronickit', function()
                     TriggerEvent("mhacking:start", math.random(5, 9), math.random(10, 18), OnHackDone)
                 end, function() -- Cancel
                     StopAnimTask(PlayerPedId(), "anim@gangops@facility@servers@", "hotwire", 1.0)
-                    QBCore.Functions.Notify("Cancelled..", "error")
+                    QBCore.Functions.Notify(Lang:t("error.cancelled"), "error")
                 end)
             else
-                QBCore.Functions.Notify("You're missing an item..", "error")
+                QBCore.Functions.Notify(Lang:t("error.item_missing"), "error")
             end
         end, "gatecrack")
     end
@@ -205,7 +205,7 @@ CreateThread(function()
             TriggerEvent('prison:client:PrisonBreakAlert')
             TriggerServerEvent("prison:server:SetJailStatus", 0)
             TriggerServerEvent("QBCore:Server:SetMetaData", "jailitems", {})
-            QBCore.Functions.Notify("You escaped... Get the hell out of here.!", "error")
+            QBCore.Functions.Notify(Lang:t("error.escaped"), "error")
         else
             Wait(1000)
 		end
