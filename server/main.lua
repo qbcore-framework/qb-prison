@@ -9,7 +9,7 @@ RegisterNetEvent('prison:server:SetJailStatus', function(jailTime)
     if jailTime > 0 then
         if Player.PlayerData.job.name ~= "unemployed" then
             Player.Functions.SetJob("unemployed")
-            TriggerClientEvent('QBCore:Notify', src, "You're unemployed..")
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("info.lost_job"))
         end
     end
 end)
