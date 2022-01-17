@@ -139,6 +139,8 @@ RegisterNetEvent('prison:client:Leave', function()
 		RemoveBlip(ShopBlip)
 		ShopBlip = nil
 		QBCore.Functions.Notify(Lang:t("success.free_"))
+		local weaponOnHand = GetSelectedPedWeapon(PlayerPedId())
+		RemoveWeaponFromPed(PlayerPedId(), weaponOnHand)
 		DoScreenFadeOut(500)
 		while not IsScreenFadedOut() do
 			Wait(10)
