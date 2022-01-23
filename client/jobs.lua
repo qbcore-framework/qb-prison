@@ -32,9 +32,14 @@ local function CreateJobBlip()
 end
 
 local function JobDone()
+      
     if math.random(1, 100) <= 50 then
-        QBCore.Functions.Notify(Lang:t("success.time_cut"))
-        jailTime = jailTime - math.random(1, 2)
+        if jailTime ~= -1 then
+            QBCore.Functions.Notify(Lang:t("success.time_cut"))
+            jailTime = jailTime - math.random(1, 2)
+        else 
+            QBCore.Functions.Notify(Lang:t("error.cant_time_cut"), "error", 3000)
+        end
     end
     local newLocation = math.random(1, #Config.Locations.jobs[currentJob])
     while (newLocation == currentLocation) do
