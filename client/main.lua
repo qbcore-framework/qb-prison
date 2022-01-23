@@ -72,7 +72,7 @@ end
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 	QBCore.Functions.GetPlayerData(function(PlayerData)
-		if PlayerData.metadata["injail"] > 0 then
+		if PlayerData.metadata["injail"] > 0 or PlayerData.metadata["injail"] == -1 then
 			TriggerEvent("prison:client:Enter", PlayerData.metadata["injail"])
 		end
 	end)
