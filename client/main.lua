@@ -123,7 +123,9 @@ RegisterNetEvent('prison:client:Enter', function(time)
 	CreateCellsBlip()
 	Wait(2000)
 	DoScreenFadeIn(1000)
-	QBCore.Functions.Notify( Lang:t("error.do_some_work", {currentjob = Config.Jobs[currentJob] }), "error")
+	if time ~= -1 then 
+		QBCore.Functions.Notify( Lang:t("error.do_some_work", {currentjob = Config.Jobs[currentJob] }), "error")
+	end
 end)
 
 RegisterNetEvent('prison:client:Leave', function()
