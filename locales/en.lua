@@ -10,7 +10,8 @@ local Translations = {
         ["item_missing"] = "You are missing an Item..",
         ["escaped"] = "You escaped... Get the hell out of here.!",
         ["do_some_work"] = "Do some work for sentence reduction, instant job: %{currentjob} ",
-        ["infinite"] = "You are in jail forever, sorry"
+        ["infinite"] = "You are in jail for lifetime, sorry",
+        ["cant_time_cut"] = "You are jailed for liftime. but thanks!"
     },
     success = {
         ["found_phone"] = "You found a phone..",
@@ -22,7 +23,7 @@ local Translations = {
         ["timeleft"] = "You still have to... %{JAILTIME} months",
         ["lost_job"] = "You're Unemployed",
         ["forever"] = "It seems like you are stuck here forever.",
-        ["cantfree"] = "It seems like this person was jailed forever"
+        ["cantfree"] = "It seems like this person was jailed for lifetime"
     }
 }
 Lang = Locale:new({
