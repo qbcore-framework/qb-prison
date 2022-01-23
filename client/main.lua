@@ -97,7 +97,11 @@ RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
 end)
 
 RegisterNetEvent('prison:client:Enter', function(time)
-	QBCore.Functions.Notify( Lang:t("error.injail", {Time = time}), "error")
+	if time ~= -1 then 
+		QBCore.Functions.Notify( Lang:t("error.injail", {Time = time}), "error")
+	else
+		QBCore.Functions.Notify( Lang:t("error.infinite"), "error")
+	end
 
 	TriggerEvent("chatMessage", "SYSTEM", "warning", "Your property has been seized, you'll get everything back when your time is up..")
 	DoScreenFadeOut(500)
