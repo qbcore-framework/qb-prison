@@ -125,6 +125,8 @@ end)
 RegisterNetEvent('prison:client:Leave', function()
 	if jailTime > 0 then
 		QBCore.Functions.Notify( Lang:t("info.timeleft", {JAILTIME = jailTime}))
+	elseif jailTime == -1 then
+		QBCore.Functions.Notify( Lang:t("info.forever"))
 	else
 		jailTime = 0
 		TriggerServerEvent("prison:server:SetJailStatus", 0)
