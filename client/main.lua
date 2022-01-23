@@ -126,7 +126,7 @@ RegisterNetEvent('prison:client:Leave', function()
 	if jailTime > 0 then
 		QBCore.Functions.Notify( Lang:t("info.timeleft", {JAILTIME = jailTime}))
 	elseif jailTime == -1 then
-		QBCore.Functions.Notify( Lang:t("info.forever"))
+		QBCore.Functions.Notify( Lang:t("info.forever"), "error", 3000)
 	else
 		jailTime = 0
 		TriggerServerEvent("prison:server:SetJailStatus", 0)
@@ -176,6 +176,8 @@ RegisterNetEvent('prison:client:UnjailPerson', function()
 		SetEntityHeading(PlayerPedId(), Config.Locations["outside"].coords.w)
 		Wait(500)
 		DoScreenFadeIn(1000)
+	elseif jailTime == -1 then 
+		QBCore.Functions.Notify( Lang:t("info.cantfree"), "error", 3000)
 	end
 end)
 
