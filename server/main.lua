@@ -89,6 +89,14 @@ RegisterNetEvent('prison:server:JailAlarm', function()
     end
 end)
 
+RegisterNetEvent('qb-prison:client:givephone', function()
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if Player then
+        Player.Functions.AddItem('phone', 1)
+    end
+end)
+
 QBCore.Functions.CreateCallback('prison:server:IsAlarmActive', function(source, cb)
     cb(AlarmActivated)
 end)

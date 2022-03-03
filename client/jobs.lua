@@ -24,7 +24,7 @@ local function CreateJobBlip()
         local Chance = math.random(100)
         local Odd = math.random(100)
         if Chance == Odd then
-            TriggerServerEvent('QBCore:Server:AddItem', 'phone', 1)
+            TriggerServerEvent('qb-prison:client:givephone')
             TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["phone"], "add")
             QBCore.Functions.Notify(Lang:t("success.found_phone"), "success")
         end
