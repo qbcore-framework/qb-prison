@@ -8,6 +8,7 @@ ShopBlip = nil
 PlayerJob = {}
 
 -- Functions
+
 local function CreatefreedomNPC()
     created_ped = CreatePed(5, GetHashKey('s_m_m_armoured_01') , 1836.37, 2585.33, 44.88, 78.67, false, true)
     FreezeEntityPosition(created_ped, true)
@@ -173,6 +174,14 @@ RegisterNetEvent('prison:client:Leave', function()
 	end
 end)
 
+RegisterNetEvent('prison:client:canteen',function()
+	local ShopItems = {}
+	ShopItems.label = "Prison Canteen"
+	ShopItems.items = Config.CanteenItems
+	ShopItems.slots = #Config.CanteenItems
+	TriggerServerEvent("inventory:server:OpenInventory", "shop", "Canteenshop_"..math.random(1, 99), ShopItems)
+end)
+
 RegisterNetEvent('prison:client:UnjailPerson', function()
 	if jailTime > 0 then
 		TriggerServerEvent("prison:server:SetJailStatus", 0)
@@ -221,17 +230,8 @@ CreateThread(function()
 end)
 
 
-
-
-RegisterNetEvent('prison:client:canteen',function()
-	local ShopItems = {}
-	ShopItems.label = "Prison Canteen"
-	ShopItems.items = Config.CanteenItems
-	ShopItems.slots = #Config.CanteenItems
-	TriggerServerEvent("inventory:server:OpenInventory", "shop", "Canteenshop_"..math.random(1, 99), ShopItems)
-end)
-
 if Config.UseTarget then
+	--- Ped for more realistic feel [Freedom]
 	exports['qb-target']:AddBoxZone("freedom", vector3(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z), 0.85, 0.35,  {
 		name = "freedom",
 		heading = 272.96,
@@ -249,6 +249,7 @@ if Config.UseTarget then
 		},
 		distance = 2.5,
 	})
+	--- Ped for more realistic feel [Canteen]
 	exports['qb-target']:AddBoxZone("canteen", vector3(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z), 0.85, 0.35,  {
 		name = "shop",
 		heading = 186.04,
@@ -267,6 +268,7 @@ if Config.UseTarget then
 		distance = 2.5,
 	})
 else
+	--- Using Qb-Menu
 	FreedomMenu = {
 		{
 			isMenuHeader = true,
