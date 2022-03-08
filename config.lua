@@ -1,5 +1,7 @@
 Config = {}
 
+Config.UseTarget = true ---Why would you put false? Do you hate yourself?
+
 Config.Jobs = {
     ["electrician"] = "Electrician"
 }
