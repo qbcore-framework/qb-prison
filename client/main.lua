@@ -8,33 +8,21 @@ ShopBlip = nil
 PlayerJob = {}
 
 -- Functions
-local function CreatefreedomNPC()
-    freedom_ped = CreatePed(5, GetHashKey('s_m_m_armoured_01') , 1836.37, 2585.33, 44.88, 78.67, false, true)
-    FreezeEntityPosition(freedom_ped, true)
-    SetEntityInvincible(freedom_ped, true)
-    SetBlockingOfNonTemporaryEvents(freedom_ped, true)
-    TaskStartScenarioInPlace(freedom_ped, 'WORLD_HUMAN_CLIPBOARD', 0, true)
-end
 
-local function CreateCanteenNPC()
-    canteen_ped = CreatePed(5, GetHashKey('s_m_m_armoured_01') ,1786.19, 2557.77, 44.62, 186.04, false, true)
-    FreezeEntityPosition(canteen_ped, true)
-    SetEntityInvincible(canteen_ped, true)
-    SetBlockingOfNonTemporaryEvents(canteen_ped, true)
-    TaskStartScenarioInPlace(canteen_ped, 'WORLD_HUMAN_CLIPBOARD', 0, true)
+function DrawText3D(x, y, z, text) -- Used Globally
+	SetTextScale(0.35, 0.35)
+    SetTextFont(4)
+    SetTextProportional(1)
+    SetTextColour(255, 255, 255, 215)
+    SetTextEntry("STRING")
+    SetTextCentre(true)
+    AddTextComponentString(text)
+    SetDrawOrigin(x,y,z, 0)
+    DrawText(0.0, 0.0)
+    local factor = (string.len(text)) / 370
+    DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
+    ClearDrawOrigin()
 end
-
-local function SpawnNPC()
-    CreateThread(function()
-        RequestModel(GetHashKey('s_m_m_armoured_01'))
-        while not HasModelLoaded(GetHashKey('s_m_m_armoured_01')) do
-            Wait(1000)
-        end
-        CreatefreedomNPC()
-		CreateCanteenNPC()
-    end)
-end
-
 
 local function CreateCellsBlip()
 	if CellsBlip ~= nil then
@@ -96,16 +84,7 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 	end)
 
 	PlayerJob = QBCore.Functions.GetPlayerData().job
-	SpawnNPC()
 end)
-
-AddEventHandler('onResourceStart', function(resource)
-    if resource == GetCurrentResourceName() then
-        Wait(100)
-		SpawnNPC()
-    end
-end)
-
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
     PlayerJob = JobInfo
@@ -220,87 +199,40 @@ CreateThread(function()
 	end
 end)
 
+CreateThread(function()
+	while true do
+		Wait(1)
+		if LocalPlayer.state.isLoggedIn then
+			if inJail then
+				local pos = GetEntityCoords(PlayerPedId())
+				if #(pos - vector3(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z)) < 1.5 then
+					DrawText3D(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z, "~g~E~w~ - Check time")
+					if IsControlJustReleased(0, 38) then
+						TriggerEvent("prison:client:Leave")
+					end
+				elseif #(pos - vector3(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z)) < 2.5 then
+					DrawText3D(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z, "Check time")
+				end
 
-
-
-RegisterNetEvent('prison:client:canteen',function()
-	local ShopItems = {}
-	ShopItems.label = "Prison Canteen"
-	ShopItems.items = Config.CanteenItems
-	ShopItems.slots = #Config.CanteenItems
-	TriggerServerEvent("inventory:server:OpenInventory", "shop", "Canteenshop_"..math.random(1, 99), ShopItems)
-end)
-
-if Config.UseTarget then
-	exports['qb-target']:AddTargetEntity(freedom_ped, {
-		options = {
-		{
-			type = "client",
-			event = "prison:client:Leave",
-			icon = 'fas fa-clipboard',
-			label = 'Check time',
-		}
-		},
-		distance = 2.5,
-	})
-	exports['qb-target']:AddTargetEntity(canteen_ped, {
-		options = {
-		{
-			type = "client",
-			event = "prison:client:canteen",
-			icon = 'fas fa-clipboard',
-			label = 'Get Food',
-		}
-		},
-		distance = 2.5,
-	})
-else
-	FreedomMenu = {
-		{
-			isMenuHeader = true,
-			header = 'Check Your Time',
-		},
-		{
-			header = 'Check',
-			txt = 'Gain Freedom if your time is up',
-			params = {
-				event = 'prison:client:Leave',
-			}
-		},
-	}
-	CanteenMenu = {
-		{
-			isMenuHeader = true,
-			header = 'Get Food Here',
-		},
-		{
-			header = 'Get your foods',
-			txt = 'Buy Foods and Drinks here',
-			params = {
-				event = 'prison:client:canteen',
-			}
-		},
-	}
-	local freedom = BoxZone:Create(vector3(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z), 2.75, 2.75, {
-                name="freedom",
-                debugPoly = false,
-            })
-	    freedom:onPlayerInOut(function(isPointInside)
-		if isPointInside then
-			exports['qb-menu']:openMenu(FreedomMenu)
+				if #(pos - vector3(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z)) < 1.5 then
+					DrawText3D(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z, "~g~E~w~ - Canteen")
+					if IsControlJustReleased(0, 38) then
+                        local ShopItems = {}
+                        ShopItems.label = "Prison Canteen"
+                        ShopItems.items = Config.CanteenItems
+                        ShopItems.slots = #Config.CanteenItems
+                        TriggerServerEvent("inventory:server:OpenInventory", "shop", "Canteenshop_"..math.random(1, 99), ShopItems)
+					end
+					DrawMarker(2, Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.2, 255, 55, 22, 222, false, false, false, 1, false, false, false)
+				elseif #(pos - vector3(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z)) < 2.5 then
+					DrawText3D(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z, "Canteen")
+					DrawMarker(2, Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.2, 255, 55, 22, 222, false, false, false, 1, false, false, false)
+				elseif #(pos - vector3(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z)) < 10 then
+					DrawMarker(2, Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.2, 255, 55, 22, 222, false, false, false, 1, false, false, false)
+				end
+			end
 		else
-			exports['qb-menu']:closeMenu()
+			Wait(5000)
 		end
-	end)
-	local canteen = BoxZone:Create(vector3(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z), 2.75, 7.75, {
-		name="canteen",
-		debugPoly = false,
-	})
-	canteen:onPlayerInOut(function(isPointInside)
-	if isPointInside then
-		exports['qb-menu']:openMenu(CanteenMenu)
-	else
-		exports['qb-menu']:closeMenu()
 	end
-	end)
-end
+end)
