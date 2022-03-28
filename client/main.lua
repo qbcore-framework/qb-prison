@@ -252,11 +252,11 @@ freedom = BoxZone:Create(vector3(Config.Locations["freedom"].coords.x, Config.Lo
 })
 freedom:onPlayerInOut(function(isPointInside)
 	if isPointInside then
-		exports['qb-drawtext']:DrawText('[E] Check Time', 'left')
+		exports['qb-core']:DrawText('[E] Check Time', 'left')
 		insidefreedom = true
 	else
 		insidefreedom = false
-		exports['qb-drawtext']:HideText()
+		exports['qb-core']:HideText()
 	end
 end)
 
@@ -266,17 +266,16 @@ debugPoly = false,
 })
 canteen:onPlayerInOut(function(isPointInside)
 	if isPointInside then
-		exports['qb-drawtext']:DrawText('[E] Open Canteen', 'left')
+		exports['qb-core']:DrawText('[E] Open Canteen', 'left')
 		insidecanteen = true
 	else
 		insidecanteen = false
-		exports['qb-drawtext']:HideText()
+		exports['qb-core']:HideText()
 	end
 end)
 
 local function interaction()
 	if Config.UseTarget then
-			print(freedom_ped, canteen_ped)
 			exports['qb-target']:AddTargetEntity(freedom_ped, {
 				options = {
 				{
