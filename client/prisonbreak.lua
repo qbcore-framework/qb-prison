@@ -27,7 +27,7 @@ local Gates = {
 local function OnHackDone(success)
     if success then
         TriggerServerEvent("prison:server:SetGateHit", currentGate)
-		TriggerServerEvent('qb-doorlock:server:updateState', Gates[currentGate].gatekey, false)
+		TriggerServerEvent('qb-doorlock:server:updateState', Gates[currentGate].gatekey, false, false, false, true)
 		TriggerEvent('mhacking:hide')
     else
         TriggerServerEvent("prison:server:SecurityLockdown")
