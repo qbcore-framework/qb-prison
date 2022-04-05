@@ -20,8 +20,10 @@ local Translations = {
     info = {
         ["timeleft"] = "You still have to... %{JAILTIME} months",
         ["lost_job"] = "You're Unemployed",
+        ["job_interaction"] = "[E] Electricity Work",
     }
 }
 Lang = Locale:new({
-phrases = Translations,
-warnOnMissing = true})
+    phrases = Translations,
+    warnOnMissing = true
+})
