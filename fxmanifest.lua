@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 
 description 'QB-Prison'
-version '1.0.0'
+version '2.0.0'
 
 shared_scripts {
     '@qb-core/shared/locale.lua',
@@ -24,4 +24,5 @@ client_scripts {
 
 server_script 'server/main.lua'
 
+use_fxv2_oal 'yes'
 lua54 'yes'
