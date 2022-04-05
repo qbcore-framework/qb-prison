@@ -4,7 +4,7 @@ local isWorking = false
 
 -- Functions
 
-local function CreateJobBlip()
+function CreateJobBlip() -- Used globally
     if currentLocation ~= 0 then
         if DoesBlipExist(currentBlip) then
             RemoveBlip(currentBlip)
@@ -31,10 +31,28 @@ local function CreateJobBlip()
     end
 end
 
+local function CheckAllLocations()
+    local amount = 0
+    for i = 1, #Config.Locations.jobs["electrician"] do
+        local current = Config.Locations.jobs["electrician"][i]
+        if current.done then
+            amount += 1
+        end
+    end
+    return amount == #Config.Locations.jobs["electrician"]
+end
+
+local function ResetLocations()
+    for i = 1, #Config.Locations.jobs["electrician"] do
+        Config.Locations.jobs["electrician"][i].done = false
+    end
+end
+
 local function JobDone()
+    if not Config.Locations.jobs["electrician"][currentLocation].done then return end
     if math.random(1, 100) <= 50 then
         QBCore.Functions.Notify(Lang:t("success.time_cut"))
-        jailTime = jailTime - math.random(1, 2)
+        jailTime -= math.random(1, 2)
     end
     local newLocation = math.random(1, #Config.Locations.jobs[currentJob])
     while (newLocation == currentLocation) do
@@ -43,53 +61,12 @@ local function JobDone()
     end
     currentLocation = newLocation
     CreateJobBlip()
+    if CheckAllLocations() then ResetLocations() end
 end
 
-local function jobstart(currentJob, currentLocation)
-    if Config.UseTarget then
-        exports['qb-target']:AddBoxZone("electricianwork", vector3(Config.Locations.jobs[currentJob][currentLocation].coords.x, Config.Locations.jobs[currentJob][currentLocation].coords.y, Config.Locations.jobs[currentJob][currentLocation].coords.z), 1.5, 1.6, {
-            name = "electricianwork",
-            heading = 12.0,
-            debugPoly = false,
-            minZ = 19,
-            maxZ = 219,
-        }, {
-            options = {
-            {
-                type = "client",
-                event = "qb-prison:electrician:work",
-                icon = 'fas fa-swords-laser',
-                label = 'Do Electrician Work',
-            }
-            },
-            distance = 2.5,
-        })
-    else
-        CreateThread(function()
-            local electricityzone = BoxZone:Create(vector3(Config.Locations.jobs[currentJob][currentLocation].coords.x, Config.Locations.jobs[currentJob][currentLocation].coords.y, Config.Locations.jobs[currentJob][currentLocation].coords.z), 3.0, 5.0, {
-                name="electricity",
-                debugPoly=false,
-            })
-            electricityzone:onPlayerInOut(function(isPointInside)
-                if isPointInside then
-                    exports['qb-drawtext']:DrawText('[E] Electricity Work', 'left')
-                    if IsControlJustReleased(0, 38) then
-                        TriggerEvent("qb-prison:electrician:work")
-                        electricityzone:destroy()
-                    end
-                else
-                    exports['qb-drawtext']:HideText()
-                end
-            end)
-        end)
-    end
-end
-
--- Threads
-
-RegisterNetEvent('qb-prison:electrician:work')
-AddEventHandler('qb-prison:electrician:work', function()
+local function StartWork()
     isWorking = true
+    Config.Locations.jobs["electrician"][currentLocation].done = true
     QBCore.Functions.Progressbar("work_electric", "Working on electricity..", math.random(5000, 10000), false, true, {
         disableMovement = true,
         disableCarMovement = true,
@@ -108,23 +85,66 @@ AddEventHandler('qb-prison:electrician:work', function()
         StopAnimTask(PlayerPedId(), "anim@gangops@facility@servers@", "hotwire", 1.0)
         QBCore.Functions.Notify(Lang:t("error.cancelled"), "error")
     end)
-end)
+end
+
+-- Threads
 
 CreateThread(function()
-    while true do
-        Wait(0)
-        if inJail and currentJob ~= nil then
-            if currentLocation ~= 0 then
-                if not DoesBlipExist(currentBlip) then
-                    CreateJobBlip()
-                end
-                jobstart(currentJob, currentLocation)
+    local isInside = false
+    for k in pairs(Config.Locations.jobs) do
+        for i = 1, #Config.Locations.jobs[k] do
+            local current = Config.Locations.jobs[k][i]
+            if Config.UseTarget then
+                exports['qb-target']:AddBoxZone("electricianwork", current.coords.xyz, 1.5, 1.6, {
+                    name = "electricianwork",
+                    heading = 12.0,
+                    debugPoly = false,
+                    minZ = 19,
+                    maxZ = 219
+                }, {
+                    options = {
+                        {
+                            icon = 'fas fa-swords-laser',
+                            label = 'Do Electrician Work',
+                            canInteract = function()
+                                return inJail and currentJob and not Config.Locations.jobs[k][i].done and not isWorking
+                            end,
+                            action = function()
+                                currentLocation = i
+                                StartWork()
+                            end
+                        }
+                    },
+                    distance = 2.5
+                })
             else
-                currentLocation = math.random(1, #Config.Locations.jobs[currentJob])
-                CreateJobBlip()
+                local electricityzone = BoxZone:Create(current.coords.xyz, 3.0, 5.0, {
+                    name="electricity",
+                    debugPoly=false,
+                })
+                electricityzone:onPlayerInOut(function(isPointInside)
+                    isInside = isPointInside and inJail and currentJob and not Config.Locations.jobs[k][i].done and not isWorking
+                    if isInside then
+                        currentLocation = i
+                        exports['qb-core']:DrawText(Lang:t("info.job_interaction"), 'left')
+                    else
+                        exports['qb-core']:HideText()
+                    end
+                end)
             end
-        else
-            Wait(5000)
+        end
+    end
+    if not Config.UseTarget then
+        while true do
+            local sleep = 1000
+            if isInside then
+                sleep = 0
+                if IsControlJustReleased(0, 38) then
+                    StartWork()
+                    sleep = 1000
+                end
+            end
+            Wait(sleep)
         end
     end
 end)
