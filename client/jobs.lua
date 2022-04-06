@@ -1,31 +1,30 @@
-local currentLocation = 0
-currentBlip = nil
+local currentLocation = 1
+currentBlip = 0
 local isWorking = false
 
 -- Functions
 
 function CreateJobBlip(first) -- Used globally
-    if currentLocation ~= 0 then
-        if DoesBlipExist(currentBlip) then
-            RemoveBlip(currentBlip)
-        end
-        currentBlip = AddBlipForCoord(Config.Locations.jobs[currentJob][currentLocation].coords.xyz)
-        SetBlipSprite(currentBlip, 402)
-        SetBlipDisplay(currentBlip, 4)
-        SetBlipScale(currentBlip, 0.8)
-        SetBlipAsShortRange(currentBlip, true)
-        SetBlipColour(currentBlip, 1)
-        BeginTextCommandSetBlipName("STRING")
-        AddTextComponentSubstringPlayerName("Prison Work")
-        EndTextCommandSetBlipName(currentBlip)
-        if first then return end
-        local Chance = math.random(100)
-        local Odd = math.random(100)
-        if Chance ~= Odd then return end
-        TriggerServerEvent('QBCore:Server:AddItem', 'phone', 1)
-        TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["phone"], "add")
-        QBCore.Functions.Notify(Lang:t("success.found_phone"), "success")
+    if DoesBlipExist(currentBlip) then
+        RemoveBlip(currentBlip)
     end
+    local coords = Config.Locations.jobs[currentJob][currentLocation].coords.xyz
+    currentBlip = AddBlipForCoord(coords.x, coords.y, coords.z)
+    SetBlipSprite(currentBlip, 402)
+    SetBlipDisplay(currentBlip, 4)
+    SetBlipScale(currentBlip, 0.8)
+    SetBlipAsShortRange(currentBlip, true)
+    SetBlipColour(currentBlip, 1)
+    BeginTextCommandSetBlipName("STRING")
+    AddTextComponentSubstringPlayerName("Prison Work")
+    EndTextCommandSetBlipName(currentBlip)
+    if first then return end
+    local Chance = math.random(100)
+    local Odd = math.random(100)
+    if Chance ~= Odd then return end
+    TriggerServerEvent('QBCore:Server:AddItem', 'phone', 1)
+    TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["phone"], "add")
+    QBCore.Functions.Notify(Lang:t("success.found_phone"), "success")
 end
 
 local function CheckAllLocations()
