@@ -51,8 +51,8 @@ local function JobDone()
         jailTime -= math.random(1, 2)
     end
     local newLocation = math.random(1, #Config.Locations.jobs[currentJob])
-    while (newLocation == currentLocation) do
-        Wait(100)
+    while newLocation == currentLocation and Config.Locations.jobs[currentJob][newLocation].done do
+        Wait(0)
         newLocation = math.random(1, #Config.Locations.jobs[currentJob])
     end
     currentLocation = newLocation
@@ -91,8 +91,8 @@ CreateThread(function()
         for i = 1, #Config.Locations.jobs[k] do
             local current = Config.Locations.jobs[k][i]
             if Config.UseTarget then
-                exports['qb-target']:AddBoxZone("electricianwork", current.coords.xyz, 1.5, 1.6, {
-                    name = "electricianwork",
+                exports['qb-target']:AddBoxZone("electricianwork_"..k.."_"..i, current.coords.xyz, 1.5, 1.6, {
+                    name = "electricianwork_"..k.."_"..i,
                     heading = 12.0,
                     debugPoly = false,
                     minZ = 19,
@@ -100,13 +100,12 @@ CreateThread(function()
                 }, {
                     options = {
                         {
-                            icon = 'fas fa-swords-laser',
+                            icon = 'fa-solid fa-bolt',
                             label = 'Do Electrician Work',
                             canInteract = function()
-                                return inJail and currentJob and not Config.Locations.jobs[k][i].done and not isWorking
+                                return inJail and currentJob and not Config.Locations.jobs[k][i].done and not isWorking and i == currentLocation
                             end,
                             action = function()
-                                currentLocation = i
                                 StartWork()
                             end
                         }
@@ -115,13 +114,12 @@ CreateThread(function()
                 })
             else
                 local electricityzone = BoxZone:Create(current.coords.xyz, 3.0, 5.0, {
-                    name="electricity",
-                    debugPoly=false,
+                    name = "electricianwork_"..k.."_"..i,
+                    debugPoly = false,
                 })
                 electricityzone:onPlayerInOut(function(isPointInside)
                     isInside = isPointInside and inJail and currentJob and not Config.Locations.jobs[k][i].done and not isWorking
                     if isInside then
-                        currentLocation = i
                         exports['qb-core']:DrawText(Lang:t("info.job_interaction"), 'left')
                     else
                         exports['qb-core']:HideText()
