@@ -3,7 +3,7 @@ local requiredItemsShowed = false
 local requiredItems = {}
 local inRange = false
 local securityLockdown = false
-
+local PlayerJob = {}
 local Gates = {
     [1] = {
         gatekey = 13,
@@ -27,15 +27,28 @@ local Gates = {
 local function OnHackDone(success)
     if success then
         TriggerServerEvent("prison:server:SetGateHit", currentGate)
-		TriggerServerEvent('qb-doorlock:server:updateState', Gates[currentGate].gatekey, false, false, false, true)
-		TriggerEvent('mhacking:hide')
+        TriggerServerEvent('qb-doorlock:server:updateState', Gates[currentGate].gatekey, false, false, false, true)
+        TriggerEvent('mhacking:hide')
     else
         TriggerServerEvent("prison:server:SecurityLockdown")
-		TriggerEvent('mhacking:hide')
-	end
+        TriggerEvent('mhacking:hide')
+    end
 end
 
 -- Events
+
+AddEventHandler('onResourceStart', function(resource)
+    if resource ~= GetCurrentResourceName() or not LocalPlayer.state['isLoggedIn'] then return end
+    PlayerJob = QBCore.Functions.GetPlayerData().job
+end)
+
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+    PlayerJob = QBCore.Functions.GetPlayerData().job
+end)
+
+RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
+    PlayerJob = JobInfo
+end)
 
 RegisterNetEvent('electronickit:UseElectronickit', function()
     if currentGate ~= 0 and not securityLockdown and not Gates[currentGate].hit then
@@ -93,10 +106,10 @@ RegisterNetEvent('prison:client:PrisonBreakAlert', function()
 
     local BreakBlip = AddBlipForCoord(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y, Config.Locations["middle"].coords.z)
     TriggerServerEvent('prison:server:JailAlarm')
-	SetBlipSprite(BreakBlip , 161)
-	SetBlipScale(BreakBlip , 3.0)
-	SetBlipColour(BreakBlip, 3)
-	PulseBlip(BreakBlip)
+    SetBlipSprite(BreakBlip , 161)
+    SetBlipScale(BreakBlip , 3.0)
+    SetBlipColour(BreakBlip, 3)
+    PulseBlip(BreakBlip)
     PlaySound(-1, "Lose_1st", "GTAO_FM_Events_Soundset", 0, 0, 1)
     Wait(100)
     PlaySoundFrontend( -1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", 1 )
@@ -188,11 +201,11 @@ CreateThread(function()
 end)
 
 CreateThread(function()
-	while true do
-		Wait(7)
-		local pos = GetEntityCoords(PlayerPedId(), true)
+    while true do
+        Wait(7)
+        local pos = GetEntityCoords(PlayerPedId(), true)
         if #(pos - vector3(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y, Config.Locations["middle"].coords.z)) > 200 and inJail then
-			inJail = false
+            inJail = false
             jailTime = 0
             RemoveBlip(currentBlip)
             RemoveBlip(CellsBlip)
@@ -208,6 +221,6 @@ CreateThread(function()
             QBCore.Functions.Notify(Lang:t("error.escaped"), "error")
         else
             Wait(1000)
-		end
-	end
+        end
+    end
 end)
