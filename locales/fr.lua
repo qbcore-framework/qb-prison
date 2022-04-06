@@ -20,7 +20,7 @@ local Translations = {
     info = {
         ["timeleft"] = "Il vous reste encore... %{JAILTIME} mois",
         ["lost_job"] = "Vous êtes au chômage",
-        ["job_interaction"] = "[E] Electricity Work", -- This needs to be translated
+        ["job_interaction"] = "[E] Travailler sur l'électricité",
     }
 }
 Lang = Locale:new({
