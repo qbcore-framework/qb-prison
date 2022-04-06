@@ -4,30 +4,27 @@ local isWorking = false
 
 -- Functions
 
-function CreateJobBlip() -- Used globally
+function CreateJobBlip(first) -- Used globally
     if currentLocation ~= 0 then
         if DoesBlipExist(currentBlip) then
             RemoveBlip(currentBlip)
         end
-        currentBlip = AddBlipForCoord(Config.Locations.jobs[currentJob][currentLocation].coords.x, Config.Locations.jobs[currentJob][currentLocation].coords.y, Config.Locations.jobs[currentJob][currentLocation].coords.z)
-
-        SetBlipSprite (currentBlip, 402)
+        currentBlip = AddBlipForCoord(Config.Locations.jobs[currentJob][currentLocation].coords.xyz)
+        SetBlipSprite(currentBlip, 402)
         SetBlipDisplay(currentBlip, 4)
-        SetBlipScale  (currentBlip, 0.8)
+        SetBlipScale(currentBlip, 0.8)
         SetBlipAsShortRange(currentBlip, true)
         SetBlipColour(currentBlip, 1)
-
         BeginTextCommandSetBlipName("STRING")
-        AddTextComponentSubstringPlayerName(Config.Jobs[currentJob])
+        AddTextComponentSubstringPlayerName("Prison Work")
         EndTextCommandSetBlipName(currentBlip)
-
+        if first then return end
         local Chance = math.random(100)
         local Odd = math.random(100)
-        if Chance == Odd then
-            TriggerServerEvent('QBCore:Server:AddItem', 'phone', 1)
-            TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["phone"], "add")
-            QBCore.Functions.Notify(Lang:t("success.found_phone"), "success")
-        end
+        if Chance ~= Odd then return end
+        TriggerServerEvent('QBCore:Server:AddItem', 'phone', 1)
+        TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["phone"], "add")
+        QBCore.Functions.Notify(Lang:t("success.found_phone"), "success")
     end
 end
 
