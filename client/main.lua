@@ -1,18 +1,19 @@
 QBCore = exports['qb-core']:GetCoreObject() -- Used Globally
 inJail = false
 jailTime = 0
-currentJob = "electrician"
+currentJob = nil
 CellsBlip = nil
 TimeBlip = nil
 ShopBlip = nil
-insidecanteen = false
-insidefreedom = false
-PlayerJob = {}
+local insidecanteen = false
+local insidefreedom = false
+local canteen_ped = 0
+local freedom_ped = 0
 
 --Function
 
 local function CreateCellsBlip()
-	if CellsBlip ~= nil then
+	if CellsBlip then
 		RemoveBlip(CellsBlip)
 	end
 	CellsBlip = AddBlipForCoord(Config.Locations["yard"].coords.x, Config.Locations["yard"].coords.y, Config.Locations["yard"].coords.z)
@@ -26,7 +27,7 @@ local function CreateCellsBlip()
 	AddTextComponentSubstringPlayerName("Cellen")
 	EndTextCommandSetBlipName(CellsBlip)
 
-	if TimeBlip ~= nil then
+	if TimeBlip then
 		RemoveBlip(TimeBlip)
 	end
 	TimeBlip = AddBlipForCoord(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z)
@@ -40,7 +41,7 @@ local function CreateCellsBlip()
 	AddTextComponentSubstringPlayerName("Time check")
 	EndTextCommandSetBlipName(TimeBlip)
 
-	if ShopBlip ~= nil then
+	if ShopBlip then
 		RemoveBlip(ShopBlip)
 	end
 	ShopBlip = AddBlipForCoord(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z)
@@ -71,18 +72,19 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 		end
 	end)
 
-	PlayerJob = QBCore.Functions.GetPlayerData().job
-	RequestModel("s_m_m_armoured_01")
-	while not HasModelLoaded('s_m_m_armoured_01') do
+	if not Config.UseTarget or DoesEntityExist(canteen_ped) or DoesEntityExist(freedom_ped) then return end
+	local pedModel = `s_m_m_armoured_01`
+	RequestModel(pedModel)
+	while not HasModelLoaded(pedModel) do
 		Wait(0)
 	end
-	canteen_ped = CreatePed(5, `s_m_m_armoured_01` ,1786.19, 2557.77, 44.62, 186.04, false, true)
+	canteen_ped = CreatePed(5, pedModel ,1786.19, 2557.77, 44.62, 186.04, false, true)
 	FreezeEntityPosition(canteen_ped, true)
 	SetEntityInvincible(canteen_ped, true)
 	SetBlockingOfNonTemporaryEvents(canteen_ped, true)
 	TaskStartScenarioInPlace(canteen_ped, 'WORLD_HUMAN_CLIPBOARD', 0, true)
 
-	freedom_ped = CreatePed(5, `s_m_m_armoured_01` , 1836.37, 2585.33, 44.88, 78.67, false, true)
+	freedom_ped = CreatePed(5, pedModel , 1836.37, 2585.33, 44.88, 78.67, false, true)
 	FreezeEntityPosition(freedom_ped, true)
 	SetEntityInvincible(freedom_ped, true)
 	SetBlockingOfNonTemporaryEvents(freedom_ped, true)
@@ -120,73 +122,68 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 end)
 
 AddEventHandler('onResourceStart', function(resource)
-    if resource == GetCurrentResourceName() then
-        Wait(100)
+    if resource ~= GetCurrentResourceName() then return end
+	Wait(100)
+	if LocalPlayer.state['isLoggedIn'] then
 		QBCore.Functions.GetPlayerData(function(PlayerData)
 			if PlayerData.metadata["injail"] > 0 then
 				TriggerEvent("prison:client:Enter", PlayerData.metadata["injail"])
 			end
 		end)
+	end
 
-		QBCore.Functions.TriggerCallback('prison:server:IsAlarmActive', function(active)
-			if active then
-				TriggerEvent('prison:client:JailAlarm', true)
-			end
-		end)
+	QBCore.Functions.TriggerCallback('prison:server:IsAlarmActive', function(active)
+		if not active then return end
+		TriggerEvent('prison:client:JailAlarm', true)
+	end)
 
-		PlayerJob = QBCore.Functions.GetPlayerData().job
+	if not Config.UseTarget or DoesEntityExist(canteen_ped) or DoesEntityExist(freedom_ped) then return end
+	local pedModel = `s_m_m_armoured_01`
+	RequestModel(pedModel)
+	while not HasModelLoaded(pedModel) do
+		Wait(0)
+	end
+	canteen_ped = CreatePed(5, pedModel, 1786.19, 2557.77, 44.62, 186.04, false, true)
+	FreezeEntityPosition(canteen_ped, true)
+	SetEntityInvincible(canteen_ped, true)
+	SetBlockingOfNonTemporaryEvents(canteen_ped, true)
+	TaskStartScenarioInPlace(canteen_ped, 'WORLD_HUMAN_CLIPBOARD', 0, true)
 
-		RequestModel("s_m_m_armoured_01")
-		while not HasModelLoaded('s_m_m_armoured_01') do
-			Wait(0)
-		end
-		canteen_ped = CreatePed(5, `s_m_m_armoured_01`, 1786.19, 2557.77, 44.62, 186.04, false, true)
-		FreezeEntityPosition(canteen_ped, true)
-		SetEntityInvincible(canteen_ped, true)
-		SetBlockingOfNonTemporaryEvents(canteen_ped, true)
-		TaskStartScenarioInPlace(canteen_ped, 'WORLD_HUMAN_CLIPBOARD', 0, true)
+	freedom_ped = CreatePed(5, pedModel, 1836.37, 2585.33, 44.88, 78.67, false, true)
+	FreezeEntityPosition(freedom_ped, true)
+	SetEntityInvincible(freedom_ped, true)
+	SetBlockingOfNonTemporaryEvents(freedom_ped, true)
+	TaskStartScenarioInPlace(freedom_ped, 'WORLD_HUMAN_CLIPBOARD', 0, true)
 
-		freedom_ped = CreatePed(5, `s_m_m_armoured_01`, 1836.37, 2585.33, 44.88, 78.67, false, true)
-		FreezeEntityPosition(freedom_ped, true)
-		SetEntityInvincible(freedom_ped, true)
-		SetBlockingOfNonTemporaryEvents(freedom_ped, true)
-		TaskStartScenarioInPlace(freedom_ped, 'WORLD_HUMAN_CLIPBOARD', 0, true)
+	exports['qb-target']:AddTargetEntity(freedom_ped, {
+		options = {
+			{
+				type = "client",
+				event = "prison:client:Leave",
+				icon = 'fas fa-clipboard',
+				label = 'Check time',
+				canInteract = function()
+					return inJail
+				end
+			}
+		},
+		distance = 2.5,
+	})
 
-		exports['qb-target']:AddTargetEntity(freedom_ped, {
-			options = {
-				{
-					type = "client",
-					event = "prison:client:Leave",
-					icon = 'fas fa-clipboard',
-					label = 'Check time',
-					canInteract = function()
-						return inJail
-					end
-				}
-			},
-			distance = 2.5,
-		})
-
-		exports['qb-target']:AddTargetEntity(canteen_ped, {
-			options = {
-				{
-					type = "client",
-					event = "prison:client:canteen",
-					icon = 'fas fa-clipboard',
-					label = 'Get Food',
-					canInteract = function()
-						return inJail
-					end
-				}
-			},
-			distance = 2.5,
-		})
-    end
-end)
-
-
-RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
-    PlayerJob = JobInfo
+	exports['qb-target']:AddTargetEntity(canteen_ped, {
+		options = {
+			{
+				type = "client",
+				event = "prison:client:canteen",
+				icon = 'fas fa-clipboard',
+				label = 'Get Food',
+				canInteract = function()
+					return inJail
+				end
+			}
+		},
+		distance = 2.5,
+	})
 end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
@@ -212,7 +209,7 @@ RegisterNetEvent('prison:client:Enter', function(time)
 	inJail = true
 	jailTime = time
 	currentJob = "electrician"
-	CreateJobBlip()
+	CreateJobBlip(true)
 	TriggerServerEvent("prison:server:SetJailStatus", jailTime)
 	TriggerServerEvent("prison:server:SaveJailItems", jailTime)
 	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
