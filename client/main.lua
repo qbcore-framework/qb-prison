@@ -10,7 +10,7 @@ local insidefreedom = false
 local canteen_ped = 0
 local freedom_ped = 0
 
---Function
+-- Functions
 
 local function CreateCellsBlip()
 	if CellsBlip then
@@ -212,7 +212,13 @@ RegisterNetEvent('prison:client:Enter', function(time)
 
 	inJail = true
 	jailTime = time
-	currentJob = "electrician"
+	local tempJobs = {}
+	local i = 1
+	for k in pairs(Config.Locations.jobs) do
+		tempJobs[i] = k
+		i += 1
+	end
+	currentJob = tempJobs[math.random(1, #tempJobs)]
 	CreateJobBlip(true)
 	TriggerServerEvent("prison:server:SetJailStatus", jailTime)
 	TriggerServerEvent("prison:server:SaveJailItems", jailTime)
@@ -220,7 +226,7 @@ RegisterNetEvent('prison:client:Enter', function(time)
 	CreateCellsBlip()
 	Wait(2000)
 	DoScreenFadeIn(1000)
-	QBCore.Functions.Notify( Lang:t("error.do_some_work", {currentjob = currentJob }), "error")
+	QBCore.Functions.Notify( Lang:t("error.do_some_work", {currentjob = Config.Jobs[currentJob] }), "error")
 end)
 
 RegisterNetEvent('prison:client:Leave', function()
