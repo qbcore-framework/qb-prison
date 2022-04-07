@@ -24,7 +24,7 @@ local function CreateCellsBlip()
 	SetBlipAsShortRange(CellsBlip, true)
 	SetBlipColour(CellsBlip, 4)
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentSubstringPlayerName("Cellen")
+	AddTextComponentSubstringPlayerName("Cells")
 	EndTextCommandSetBlipName(CellsBlip)
 
 	if TimeBlip then
@@ -32,9 +32,9 @@ local function CreateCellsBlip()
 	end
 	TimeBlip = AddBlipForCoord(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z)
 
-	SetBlipSprite (TimeBlip, 466)
+	SetBlipSprite(TimeBlip, 466)
 	SetBlipDisplay(TimeBlip, 4)
-	SetBlipScale  (TimeBlip, 0.8)
+	SetBlipScale(TimeBlip, 0.8)
 	SetBlipAsShortRange(TimeBlip, true)
 	SetBlipColour(TimeBlip, 4)
 	BeginTextCommandSetBlipName("STRING")
@@ -46,9 +46,9 @@ local function CreateCellsBlip()
 	end
 	ShopBlip = AddBlipForCoord(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z)
 
-	SetBlipSprite (ShopBlip, 52)
+	SetBlipSprite(ShopBlip, 52)
 	SetBlipDisplay(ShopBlip, 4)
-	SetBlipScale  (ShopBlip, 0.5)
+	SetBlipScale(ShopBlip, 0.5)
 	SetBlipAsShortRange(ShopBlip, true)
 	SetBlipColour(ShopBlip, 0)
 	BeginTextCommandSetBlipName("STRING")
@@ -78,13 +78,13 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 	while not HasModelLoaded(pedModel) do
 		Wait(0)
 	end
-	canteen_ped = CreatePed(5, pedModel ,1786.19, 2557.77, 44.62, 186.04, false, true)
+	canteen_ped = CreatePed(0, pedModel ,1786.19, 2557.77, 44.62, 186.04, false, true)
 	FreezeEntityPosition(canteen_ped, true)
 	SetEntityInvincible(canteen_ped, true)
 	SetBlockingOfNonTemporaryEvents(canteen_ped, true)
 	TaskStartScenarioInPlace(canteen_ped, 'WORLD_HUMAN_CLIPBOARD', 0, true)
 
-	freedom_ped = CreatePed(5, pedModel , 1836.37, 2585.33, 44.88, 78.67, false, true)
+	freedom_ped = CreatePed(0, pedModel , 1836.37, 2585.33, 44.88, 78.67, false, true)
 	FreezeEntityPosition(freedom_ped, true)
 	SetEntityInvincible(freedom_ped, true)
 	SetBlockingOfNonTemporaryEvents(freedom_ped, true)
@@ -143,13 +143,13 @@ AddEventHandler('onResourceStart', function(resource)
 	while not HasModelLoaded(pedModel) do
 		Wait(0)
 	end
-	canteen_ped = CreatePed(5, pedModel, 1786.19, 2557.77, 44.62, 186.04, false, true)
+	canteen_ped = CreatePed(0, pedModel, 1786.19, 2557.77, 44.62, 186.04, false, true)
 	FreezeEntityPosition(canteen_ped, true)
 	SetEntityInvincible(canteen_ped, true)
 	SetBlockingOfNonTemporaryEvents(canteen_ped, true)
 	TaskStartScenarioInPlace(canteen_ped, 'WORLD_HUMAN_CLIPBOARD', 0, true)
 
-	freedom_ped = CreatePed(5, pedModel, 1836.37, 2585.33, 44.88, 78.67, false, true)
+	freedom_ped = CreatePed(0, pedModel, 1836.37, 2585.33, 44.88, 78.67, false, true)
 	FreezeEntityPosition(freedom_ped, true)
 	SetEntityInvincible(freedom_ped, true)
 	SetBlockingOfNonTemporaryEvents(freedom_ped, true)
@@ -336,16 +336,18 @@ CreateThread(function()
 				sleep = 0
 				if IsControlJustReleased(0, 38) then
 					exports['qb-core']:KeyPressed()
+					Wait(500)
+					exports['qb-core']:HideText()
 					TriggerEvent("prison:client:Leave")
-					sleep = 1000
 				end
 			end
 			if insidecanteen then
 				sleep = 0
 				if IsControlJustReleased(0, 38) then
 					exports['qb-core']:KeyPressed()
+					Wait(500)
+					exports['qb-core']:HideText()
 					TriggerEvent("prison:client:canteen")
-					sleep = 1000
 				end
 			end
 			Wait(sleep)
