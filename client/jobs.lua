@@ -4,7 +4,7 @@ local isWorking = false
 
 -- Functions
 
-function CreateJobBlip(first) -- Used globally
+function CreateJobBlip(noItem) -- Used globally
     if DoesBlipExist(currentBlip) then
         RemoveBlip(currentBlip)
     end
@@ -18,7 +18,7 @@ function CreateJobBlip(first) -- Used globally
     BeginTextCommandSetBlipName("STRING")
     AddTextComponentSubstringPlayerName("Prison Work")
     EndTextCommandSetBlipName(currentBlip)
-    if first then return end
+    if noItem then return end
     local Chance = math.random(100)
     local Odd = math.random(100)
     if Chance ~= Odd then return end
@@ -51,7 +51,7 @@ local function JobDone()
         jailTime -= math.random(1, 2)
     end
     local newLocation = math.random(1, #Config.Locations.jobs[currentJob])
-    while newLocation == currentLocation and Config.Locations.jobs[currentJob][newLocation].done do
+    while newLocation == currentLocation or Config.Locations.jobs[currentJob][newLocation].done do
         Wait(0)
         newLocation = math.random(1, #Config.Locations.jobs[currentJob])
     end
