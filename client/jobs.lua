@@ -91,8 +91,8 @@ CreateThread(function()
         for i = 1, #Config.Locations.jobs[k] do
             local current = Config.Locations.jobs[k][i]
             if Config.UseTarget then
-                exports['qb-target']:AddBoxZone(currentJob.."work_"..k.."_"..i, current.coords.xyz, 1.5, 1.6, {
-                    name = currentJob.."work_"..k.."_"..i,
+                exports['qb-target']:AddBoxZone("work_"..k.."_"..i, current.coords.xyz, 1.5, 1.6, {
+                    name = "work_"..k.."_"..i,
                     heading = 12.0,
                     debugPoly = false,
                     minZ = 19,
@@ -101,7 +101,7 @@ CreateThread(function()
                     options = {
                         {
                             icon = 'fa-solid fa-bolt',
-                            label = 'Do '..Config.Jobs[currentJob]..' Work',
+                            label = 'Do '..Config.Jobs[k]..' Work',
                             canInteract = function()
                                 return inJail and currentJob and not Config.Locations.jobs[k][i].done and not isWorking and i == currentLocation
                             end,
@@ -114,7 +114,7 @@ CreateThread(function()
                 })
             else
                 local electricityzone = BoxZone:Create(current.coords.xyz, 3.0, 5.0, {
-                    name = currentJob.."work_"..k.."_"..i,
+                    name = "work_"..k.."_"..i,
                     debugPoly = false,
                 })
                 electricityzone:onPlayerInOut(function(isPointInside)
