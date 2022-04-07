@@ -126,6 +126,7 @@ CreateThread(function()
                     end
                 end)
             end
+            Config.Locations.jobs[k][i].done = false
         end
     end
     if not Config.UseTarget then
