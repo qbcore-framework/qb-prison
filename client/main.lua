@@ -72,7 +72,7 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 		end
 	end)
 
-	if not Config.UseTarget or DoesEntityExist(canteen_ped) or DoesEntityExist(freedom_ped) then return end
+	if DoesEntityExist(canteen_ped) or DoesEntityExist(freedom_ped) then return end
 	local pedModel = `s_m_m_armoured_01`
 	RequestModel(pedModel)
 	while not HasModelLoaded(pedModel) do
@@ -89,6 +89,8 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 	SetEntityInvincible(freedom_ped, true)
 	SetBlockingOfNonTemporaryEvents(freedom_ped, true)
 	TaskStartScenarioInPlace(freedom_ped, 'WORLD_HUMAN_CLIPBOARD', 0, true)
+
+	if not Config.UseTarget then return end
 
 	exports['qb-target']:AddTargetEntity(freedom_ped, {
 		options = {
@@ -137,7 +139,7 @@ AddEventHandler('onResourceStart', function(resource)
 		TriggerEvent('prison:client:JailAlarm', true)
 	end)
 
-	if not Config.UseTarget or DoesEntityExist(canteen_ped) or DoesEntityExist(freedom_ped) then return end
+	if DoesEntityExist(canteen_ped) or DoesEntityExist(freedom_ped) then return end
 	local pedModel = `s_m_m_armoured_01`
 	RequestModel(pedModel)
 	while not HasModelLoaded(pedModel) do
@@ -154,6 +156,8 @@ AddEventHandler('onResourceStart', function(resource)
 	SetEntityInvincible(freedom_ped, true)
 	SetBlockingOfNonTemporaryEvents(freedom_ped, true)
 	TaskStartScenarioInPlace(freedom_ped, 'WORLD_HUMAN_CLIPBOARD', 0, true)
+
+	if not Config.UseTarget then return end
 
 	exports['qb-target']:AddTargetEntity(freedom_ped, {
 		options = {
