@@ -9,6 +9,8 @@ local insidecanteen = false
 local insidefreedom = false
 local canteen_ped = 0
 local freedom_ped = 0
+local freedom
+local canteen
 
 -- Functions
 
