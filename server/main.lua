@@ -1,10 +1,10 @@
 local QBCore = exports['qb-core']:GetCoreObject()
-
 local AlarmActivated = false
 
 RegisterNetEvent('prison:server:SetJailStatus', function(jailTime)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return end
     Player.Functions.SetMetaData("injail", jailTime)
     if jailTime > 0 then
         if Player.PlayerData.job.name ~= "unemployed" then
@@ -17,7 +17,8 @@ end)
 RegisterNetEvent('prison:server:SaveJailItems', function()
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    if Player.PlayerData.metadata["jailitems"] == nil or next(Player.PlayerData.metadata["jailitems"]) == nil then
+    if not Player then return end
+    if not Player.PlayerData.metadata["jailitems"] or not next(Player.PlayerData.metadata["jailitems"]) then
         Player.Functions.SetMetaData("jailitems", Player.PlayerData.items)
         Player.Functions.AddMoney('cash', 80)
         Wait(2000)
@@ -28,8 +29,9 @@ end)
 RegisterNetEvent('prison:server:GiveJailItems', function()
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return end
     Wait(1000)
-    for k, v in pairs(Player.PlayerData.metadata["jailitems"]) do
+    for _, v in pairs(Player.PlayerData.metadata["jailitems"]) do
         Player.Functions.AddItem(v.name, v.amount, false, v.info)
     end
     Wait(1000)
@@ -38,10 +40,10 @@ end)
 
 RegisterNetEvent('prison:server:SecurityLockdown', function()
     TriggerClientEvent("prison:client:SetLockDown", -1, true)
-    for k, v in pairs(QBCore.Functions.GetPlayers()) do
+    for _, v in pairs(QBCore.Functions.GetPlayers()) do
         local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then
-            if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
+        if Player then
+            if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
                 TriggerClientEvent("prison:client:PrisonBreakAlert", v)
             end
         end
@@ -51,10 +53,10 @@ end)
 RegisterNetEvent('prison:server:SetGateHit', function(key)
     TriggerClientEvent("prison:client:SetGateHit", -1, key, true)
     if math.random(1, 100) <= 50 then
-        for k, v in pairs(QBCore.Functions.GetPlayers()) do
+        for _, v in pairs(QBCore.Functions.GetPlayers()) do
             local Player = QBCore.Functions.GetPlayer(v)
-            if Player ~= nil then
-                if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
+            if Player then
+                if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
                     TriggerClientEvent("prison:client:PrisonBreakAlert", v)
                 end
             end
@@ -65,6 +67,7 @@ end)
 RegisterNetEvent('prison:server:CheckRecordStatus', function()
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return end
     local CriminalRecord = Player.PlayerData.metadata["criminalrecord"]
     local currentDate = os.date("*t")
 
@@ -81,14 +84,17 @@ RegisterNetEvent('prison:server:CheckRecordStatus', function()
 end)
 
 RegisterNetEvent('prison:server:JailAlarm', function()
-    if not AlarmActivated then
-        TriggerClientEvent('prison:client:JailAlarm', -1, true)
-        SetTimeout(5 * (60 * 1000), function()
-            TriggerClientEvent('prison:client:JailAlarm', -1, false)
-        end)
-    end
+    if AlarmActivated then return end
+    local playerPed = GetPlayerPed(source)
+    local coords = GetEntityCoords(playerPed)
+    local middle = vector3(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y, Config.Locations["middle"].coords.z)
+    if #(coords - middle) < 200 then return error('"prison:server:JailAlarm" triggered whilst the player was too close to the prison, cancelled event') end
+    TriggerClientEvent('prison:client:JailAlarm', -1, true)
+    SetTimeout(5 * 60000, function()
+        TriggerClientEvent('prison:client:JailAlarm', -1, false)
+    end)
 end)
 
-QBCore.Functions.CreateCallback('prison:server:IsAlarmActive', function(source, cb)
+QBCore.Functions.CreateCallback('prison:server:IsAlarmActive', function(_, cb)
     cb(AlarmActivated)
 end)

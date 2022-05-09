@@ -3,7 +3,7 @@ local requiredItemsShowed = false
 local requiredItems = {}
 local inRange = false
 local securityLockdown = false
-
+local PlayerJob = {}
 local Gates = {
     [1] = {
         gatekey = 13,
@@ -27,15 +27,28 @@ local Gates = {
 local function OnHackDone(success)
     if success then
         TriggerServerEvent("prison:server:SetGateHit", currentGate)
-		TriggerServerEvent('qb-doorlock:server:updateState', Gates[currentGate].gatekey, false, false, false, true)
-		TriggerEvent('mhacking:hide')
+        TriggerServerEvent('qb-doorlock:server:updateState', Gates[currentGate].gatekey, false, false, false, true)
+        TriggerEvent('mhacking:hide')
     else
         TriggerServerEvent("prison:server:SecurityLockdown")
-		TriggerEvent('mhacking:hide')
-	end
+        TriggerEvent('mhacking:hide')
+    end
 end
 
 -- Events
+
+AddEventHandler('onResourceStart', function(resource)
+    if resource ~= GetCurrentResourceName() or not LocalPlayer.state['isLoggedIn'] then return end
+    PlayerJob = QBCore.Functions.GetPlayerData().job
+end)
+
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+    PlayerJob = QBCore.Functions.GetPlayerData().job
+end)
+
+RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
+    PlayerJob = JobInfo
+end)
 
 RegisterNetEvent('electronickit:UseElectronickit', function()
     if currentGate ~= 0 and not securityLockdown and not Gates[currentGate].hit then
@@ -74,29 +87,17 @@ RegisterNetEvent('prison:client:SetLockDown', function(isLockdown)
 end)
 
 RegisterNetEvent('prison:client:PrisonBreakAlert', function()
-    -- TriggerEvent("chatMessage", "ALERT", "error", "Attentie alle eenheden! Poging tot uitbraak in de gevangenis!")
-    TriggerEvent('qb-policealerts:client:AddPoliceAlert', {
-        timeOut = 10000,
-        alertTitle = "Prison outbreak",
-        details = {
-            [1] = {
-                icon = '<i class="fas fa-lock"></i>',
-                detail = "Boilingbroke Penitentiary",
-            },
-            [2] = {
-                icon = '<i class="fas fa-globe-europe"></i>',
-                detail = "Route 68",
-            },
-        },
-        callSign = QBCore.Functions.GetPlayerData().metadata["callsign"],
-    })
+    local coords = vector3(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y, Config.Locations["middle"].coords.z)
+    local alertData = {title = "New Call", coords = {coords.x, coords.y, coords.z}, description = "Prison outbreak"}
+    TriggerEvent("qb-phone:client:addPoliceAlert", alertData)
+    TriggerEvent('police:client:policeAlert', coords, "Prison outbreak")
 
-    local BreakBlip = AddBlipForCoord(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y, Config.Locations["middle"].coords.z)
+    local BreakBlip = AddBlipForCoord(coords.x, coords.y, coords.z)
     TriggerServerEvent('prison:server:JailAlarm')
-	SetBlipSprite(BreakBlip , 161)
-	SetBlipScale(BreakBlip , 3.0)
-	SetBlipColour(BreakBlip, 3)
-	PulseBlip(BreakBlip)
+    SetBlipSprite(BreakBlip , 161)
+    SetBlipScale(BreakBlip , 3.0)
+    SetBlipColour(BreakBlip, 3)
+    PulseBlip(BreakBlip)
     PlaySound(-1, "Lose_1st", "GTAO_FM_Events_Soundset", 0, 0, 1)
     Wait(100)
     PlaySoundFrontend( -1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", 1 )
@@ -149,20 +150,22 @@ CreateThread(function()
         [2] = {name = QBCore.Shared.Items["gatecrack"]["name"], image = QBCore.Shared.Items["gatecrack"]["image"]},
     }
     while true do
-        Wait(5)
         inRange = false
         currentGate = 0
+        local sleep = 1000
         if LocalPlayer.state.isLoggedIn then
             if PlayerJob.name ~= "police" then
                 local pos = GetEntityCoords(PlayerPedId())
-                for k, v in pairs(Gates) do
+                for k in pairs(Gates) do
                     local dist =  #(pos - Gates[k].coords)
-                    if (dist < 1.5) then
+                    if dist < 1.5 then
                         currentGate = k
                         inRange = true
                         if securityLockdown then
+                            sleep = 0
                             DrawText3D(Gates[k].coords.x, Gates[k].coords.y, Gates[k].coords.z, "~r~SYSTEM LOCKDOWN")
                         elseif Gates[k].hit then
+                            sleep = 0
                             DrawText3D(Gates[k].coords.x, Gates[k].coords.y, Gates[k].coords.z, "SYSTEM BREACH")
                         elseif not requiredItemsShowed then
                             requiredItemsShowed = true
@@ -176,23 +179,18 @@ CreateThread(function()
                         requiredItemsShowed = false
                         TriggerEvent('inventory:client:requiredItems', requiredItems, false)
                     end
-                    Wait(1000)
                 end
-            else
-                Wait(1000)
             end
-        else
-            Wait(5000)
         end
+        Wait(sleep)
     end
 end)
 
 CreateThread(function()
-	while true do
-		Wait(7)
-		local pos = GetEntityCoords(PlayerPedId(), true)
+    while true do
+        local pos = GetEntityCoords(PlayerPedId(), true)
         if #(pos - vector3(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y, Config.Locations["middle"].coords.z)) > 200 and inJail then
-			inJail = false
+            inJail = false
             jailTime = 0
             RemoveBlip(currentBlip)
             RemoveBlip(CellsBlip)
@@ -206,8 +204,7 @@ CreateThread(function()
             TriggerServerEvent("prison:server:SetJailStatus", 0)
             TriggerServerEvent("QBCore:Server:SetMetaData", "jailitems", {})
             QBCore.Functions.Notify(Lang:t("error.escaped"), "error")
-        else
-            Wait(1000)
-		end
-	end
+        end
+        Wait(1000)
+    end
 end)
