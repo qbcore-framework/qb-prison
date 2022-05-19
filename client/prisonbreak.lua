@@ -103,7 +103,7 @@ end)
 
 RegisterNetEvent('prison:client:PrisonBreakAlert', function()
     local coords = vector3(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y, Config.Locations["middle"].coords.z)
-    local alertData = {title = "New Call", coords = {coords.x, coords.y, coords.z}, description = "Prison outbreak"}
+    local alertData = {title = "New Call", coords = {x = coords.x, y = coords.y, z = coords.z}, description = "Prison outbreak"}
     TriggerEvent("qb-phone:client:addPoliceAlert", alertData)
     TriggerEvent('police:client:policeAlert', coords, "Prison outbreak")
 
