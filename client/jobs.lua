@@ -19,12 +19,7 @@ function CreateJobBlip(noItem) -- Used globally
     AddTextComponentSubstringPlayerName("Prison Work")
     EndTextCommandSetBlipName(currentBlip)
     if noItem then return end
-    local Chance = math.random(100)
-    local Odd = math.random(100)
-    if Chance ~= Odd then return end
-    TriggerServerEvent('QBCore:Server:AddItem', 'phone', 1)
-    TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["phone"], "add")
-    QBCore.Functions.Notify(Lang:t("success.found_phone"), "success")
+    TriggerServerEvent('prison:server:CheckChance')
 end
 
 local function CheckAllLocations()
