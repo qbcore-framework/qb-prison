@@ -205,6 +205,9 @@ RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
 end)
 
 RegisterNetEvent('prison:client:Enter', function(time)
+	local invokingResource = GetInvokingResource()
+	if invokingResource and invokingResource ~= 'qb-policejob' and invokingResource ~= 'qb-ambulancejob' and invokingResource ~= GetCurrentResourceName() then return end
+
 	QBCore.Functions.Notify( Lang:t("error.injail", {Time = time}), "error")
 
 	TriggerEvent("chatMessage", "SYSTEM", "warning", "Your property has been seized, you'll get everything back when your time is up..")
