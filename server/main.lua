@@ -101,7 +101,7 @@ end)
 RegisterNetEvent('prison:server:CheckChance', function()
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    if not Player or not Player.PlayerData.metadata.injail == 0 or GotItems[src] then return end
+    if not Player or Player.PlayerData.metadata.injail == 0 or GotItems[src] then return end
     local chance = math.random(100)
     local odd = math.random(100)
     if chance ~= odd then return end
