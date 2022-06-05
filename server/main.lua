@@ -1,4 +1,5 @@
 local QBCore = exports['qb-core']:GetCoreObject()
+local GotItems = {}
 local AlarmActivated = false
 
 RegisterNetEvent('prison:server:SetJailStatus', function(jailTime)
@@ -11,6 +12,8 @@ RegisterNetEvent('prison:server:SetJailStatus', function(jailTime)
             Player.Functions.SetJob("unemployed")
             TriggerClientEvent('QBCore:Notify', src, Lang:t("info.lost_job"))
         end
+    else
+        GotItems[source] = nil
     end
 end)
 
@@ -93,6 +96,19 @@ RegisterNetEvent('prison:server:JailAlarm', function()
     SetTimeout(5 * 60000, function()
         TriggerClientEvent('prison:client:JailAlarm', -1, false)
     end)
+end)
+
+RegisterNetEvent('prison:server:CheckChance', function()
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if not Player or Player.PlayerData.metadata.injail == 0 or GotItems[src] then return end
+    local chance = math.random(100)
+    local odd = math.random(100)
+    if chance ~= odd then return end
+    if not Player.Functions.AddItem('phone', 1) then return end
+    TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items['phone'], 'add')
+    TriggerClientEvent('QBCore:Notify', src, Lang:t('success.found_phone'), 'success')
+    GotItems[src] = true
 end)
 
 QBCore.Functions.CreateCallback('prison:server:IsAlarmActive', function(_, cb)
