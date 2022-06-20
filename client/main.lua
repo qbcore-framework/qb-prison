@@ -205,6 +205,13 @@ RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
 end)
 
 RegisterNetEvent('prison:client:Enter', function(time)
+	local invokingResource = GetInvokingResource()
+	if invokingResource and invokingResource ~= 'qb-policejob' and invokingResource ~= 'qb-ambulancejob' and invokingResource ~= GetCurrentResourceName() then
+		-- Use QBCore.Debug here for a quick and easy way to print to the console to grab your attention with this message
+		QBCore.Debug({('Player with source %s tried to execute prison:client:Enter manually or from another resource which is not authorized to call this, invokedResource: %s'):format(GetPlayerServerId(PlayerId()), invokingResource)})
+		return
+	end
+
 	QBCore.Functions.Notify( Lang:t("error.injail", {Time = time}), "error")
 
 	TriggerEvent("chatMessage", "SYSTEM", "warning", "Your property has been seized, you'll get everything back when your time is up..")
