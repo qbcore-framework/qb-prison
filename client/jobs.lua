@@ -45,6 +45,7 @@ local function JobDone()
         QBCore.Functions.Notify(Lang:t("success.time_cut"))
         jailTime -= math.random(1, 2)
     end
+    if CheckAllLocations() then ResetLocations() end
     local newLocation = math.random(1, #Config.Locations.jobs[currentJob])
     while newLocation == currentLocation or Config.Locations.jobs[currentJob][newLocation].done do
         Wait(0)
@@ -52,7 +53,6 @@ local function JobDone()
     end
     currentLocation = newLocation
     CreateJobBlip()
-    if CheckAllLocations() then ResetLocations() end
 end
 
 local function StartWork()
