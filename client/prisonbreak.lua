@@ -204,7 +204,7 @@ end)
 CreateThread(function()
     while true do
         local pos = GetEntityCoords(PlayerPedId(), true)
-        if #(pos - vector3(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y, Config.Locations["middle"].coords.z)) > 200 and inJail then
+        if #(pos.xy - vec2(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y)) > 200 and inJail then
             inJail = false
             jailTime = 0
             RemoveBlip(currentBlip)
