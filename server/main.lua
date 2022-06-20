@@ -90,8 +90,8 @@ RegisterNetEvent('prison:server:JailAlarm', function()
     if AlarmActivated then return end
     local playerPed = GetPlayerPed(source)
     local coords = GetEntityCoords(playerPed)
-    local middle = vector3(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y, Config.Locations["middle"].coords.z)
-    if #(coords - middle) < 200 then return error('"prison:server:JailAlarm" triggered whilst the player was too close to the prison, cancelled event') end
+    local middle = vec2(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y)
+    if #(coords.xy - middle) < 200 then return error('"prison:server:JailAlarm" triggered whilst the player was too close to the prison, cancelled event') end
     TriggerClientEvent('prison:client:JailAlarm', -1, true)
     SetTimeout(5 * 60000, function()
         TriggerClientEvent('prison:client:JailAlarm', -1, false)
