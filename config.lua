@@ -2,6 +2,41 @@ Config = {}
 
 Config.UseTarget = GetConvar('UseTarget', 'false') == 'true' -- Use qb-target interactions (don't change this, go to your server.cfg and add `setr UseTarget true` to use this and just that from true to false or the other way around)
 
+local isServer = IsDuplicityVersion()
+if not isServer then
+    --- This is called whenever an item check occurs
+    ---
+    --- Accepted formats for `items`:
+    --- ```lua
+    --- 'itemName'
+    ---
+    --- {'item1', 'item2', 'etc'}
+    ---
+    --- {['item1'] = amount, ['item2'] = 2, ['etc' = 5]} -- the amount here is the amount needed of that item, if the amount variable is defined when this format is used, the amount variable will be prioritized
+    --- ```
+    --- @param items table | array | string
+    --- @param amount number | nil
+    --- @return boolean
+    function Config.HasItem(items, amount)
+        return QBCore.Functions.HasItem(items, amount)
+    end
+
+    --- This function will be triggered once the hack is done
+    --- @param success boolean
+    --- @param currentGate number
+    --- @param gateData table
+    --- @return nil
+    function Config.OnHackDone(success, currentGate, gateData)
+        if success then
+            TriggerServerEvent("prison:server:SetGateHit", currentGate)
+            TriggerServerEvent('qb-doorlock:server:updateState', gateData.gatekey, false, false, false, true)
+        else
+            TriggerServerEvent("prison:server:SecurityLockdown")
+        end
+        TriggerEvent('mhacking:hide')
+    end
+end
+
 Config.Jobs = {
     ["electrician"] = "Electrician"
 }
