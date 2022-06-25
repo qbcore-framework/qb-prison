@@ -41,6 +41,13 @@ RegisterNetEvent('prison:server:GiveJailItems', function()
     Player.Functions.SetMetaData("jailitems", {})
 end)
 
+RegisterNetEvent('prison:server:ResetJailItems', function()
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return end
+    Player.Functions.SetMetaData("jailitems", {})
+end)
+
 RegisterNetEvent('prison:server:SecurityLockdown', function()
     TriggerClientEvent("prison:client:SetLockDown", -1, true)
     for _, v in pairs(QBCore.Functions.GetPlayers()) do
