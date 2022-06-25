@@ -14,6 +14,8 @@ local canteen
 
 -- Functions
 
+--- This will create the blips for the cells, time check and shop
+--- @return nil
 local function CreateCellsBlip()
 	if CellsBlip then
 		RemoveBlip(CellsBlip)
@@ -57,7 +59,6 @@ local function CreateCellsBlip()
 	AddTextComponentSubstringPlayerName("Canteen")
 	EndTextCommandSetBlipName(ShopBlip)
 end
-
 
 -- Events
 
