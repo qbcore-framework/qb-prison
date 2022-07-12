@@ -10,6 +10,7 @@ local Translations = {
         ["item_missing"] = "Je mist een Item..",
         ["escaped"] = "Je bent ontsnapt... Maak dat je wegkomt.!",
         ["do_some_work"] = "Werk voor een strafvermindering, huidige baan: %{currentjob} ",
+        ["security_activated"] = "Noodalarm, blijf bij de cellen!"
     },
     success = {
         ["found_phone"] = "Je hebt een telefoon gevonden..",
@@ -20,8 +21,22 @@ local Translations = {
     info = {
         ["timeleft"] = "Je hebt nog... %{JAILTIME} maanden",
         ["lost_job"] = "Je bent Werkloos",
+        ["job_interaction_target"] = "Doe %{job} Werk",
+        ["received_property"] = "Je kreeg je eigendommen terug..",
+        ["seized_property"] = "Jouw eigendommen zijn ingenomen, je krijgt ze terug zodra je tijd is verlopen..",
+        ["cells_blip"] = "Cellen",
+        ["freedom_blip"] = "Gevangenis Receptie",
+        ["canteen_blip"] = "Kantine",
+        ["work_blip"] = "Gevangeniswerk",
+        ["target_freedom_option"] = "Check Tijd",
+        ["target_canteen_option"] = "Pak Eten",
+        ["police_alert_title"] = "Nieuwe Oproep",
+        ["police_alert_description"] = "Gevangenisuitbraak",
+        ["connecting_device"] = "Apparaat Koppelen",
+        ["working_electricity"] = "Draden Vastzetten"
     }
 }
 Lang = Locale:new({
-phrases = Translations,
-warnOnMissing = true})
+    phrases = Translations,
+    warnOnMissing = true
+})
