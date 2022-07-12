@@ -4,23 +4,6 @@ Config.UseTarget = GetConvar('UseTarget', 'false') == 'true' -- Use qb-target in
 
 local isServer = IsDuplicityVersion()
 if not isServer then
-    --- This is called whenever an item check occurs
-    ---
-    --- Accepted formats for `items`:
-    --- ```lua
-    --- 'itemName'
-    ---
-    --- {'item1', 'item2', 'etc'}
-    ---
-    --- {['item1'] = amount, ['item2'] = 2, ['etc' = 5]} -- the amount here is the amount needed of that item, if the amount variable is defined when this format is used, the amount variable will be prioritized
-    --- ```
-    --- @param items table | array | string
-    --- @param amount number | nil
-    --- @return boolean
-    function Config.HasItem(items, amount)
-        return QBCore.Functions.HasItem(items, amount)
-    end
-
     --- This function will be triggered once the hack is done
     --- @param success boolean
     --- @param currentGate number
