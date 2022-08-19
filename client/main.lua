@@ -14,6 +14,8 @@ local canteen
 
 -- Functions
 
+--- This will create the blips for the cells, time check and shop
+--- @return nil
 local function CreateCellsBlip()
 	if CellsBlip then
 		RemoveBlip(CellsBlip)
@@ -26,7 +28,7 @@ local function CreateCellsBlip()
 	SetBlipAsShortRange(CellsBlip, true)
 	SetBlipColour(CellsBlip, 4)
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentSubstringPlayerName("Cells")
+	AddTextComponentSubstringPlayerName(Lang:t("info.cells_blip"))
 	EndTextCommandSetBlipName(CellsBlip)
 
 	if TimeBlip then
@@ -40,7 +42,7 @@ local function CreateCellsBlip()
 	SetBlipAsShortRange(TimeBlip, true)
 	SetBlipColour(TimeBlip, 4)
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentSubstringPlayerName("Time check")
+	AddTextComponentSubstringPlayerName(Lang:t("info.freedom_blip"))
 	EndTextCommandSetBlipName(TimeBlip)
 
 	if ShopBlip then
@@ -54,10 +56,9 @@ local function CreateCellsBlip()
 	SetBlipAsShortRange(ShopBlip, true)
 	SetBlipColour(ShopBlip, 0)
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentSubstringPlayerName("Canteen")
+	AddTextComponentSubstringPlayerName(Lang:t("info.canteen_blip"))
 	EndTextCommandSetBlipName(ShopBlip)
 end
-
 
 -- Events
 
@@ -103,7 +104,7 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 				type = "client",
 				event = "prison:client:Leave",
 				icon = 'fas fa-clipboard',
-				label = 'Check time',
+				label = Lang:t("info.target_freedom_option"),
 				canInteract = function()
 					return inJail
 				end
@@ -118,7 +119,7 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 				type = "client",
 				event = "prison:client:canteen",
 				icon = 'fas fa-clipboard',
-				label = 'Get Food',
+				label = Lang:t("info.target_canteen_option"),
 				canInteract = function()
 					return inJail
 				end
@@ -173,7 +174,7 @@ AddEventHandler('onResourceStart', function(resource)
 				type = "client",
 				event = "prison:client:Leave",
 				icon = 'fas fa-clipboard',
-				label = 'Check time',
+				label = Lang:t("info.target_freedom_option"),
 				canInteract = function()
 					return inJail
 				end
@@ -188,7 +189,7 @@ AddEventHandler('onResourceStart', function(resource)
 				type = "client",
 				event = "prison:client:canteen",
 				icon = 'fas fa-clipboard',
-				label = 'Get Food',
+				label = Lang:t("info.target_canteen_option"),
 				canInteract = function()
 					return inJail
 				end
@@ -214,7 +215,11 @@ RegisterNetEvent('prison:client:Enter', function(time)
 
 	QBCore.Functions.Notify( Lang:t("error.injail", {Time = time}), "error")
 
-	TriggerEvent("chatMessage", "SYSTEM", "warning", "Your property has been seized, you'll get everything back when your time is up..")
+	TriggerEvent("chat:addMessage", {
+		color = {3, 132, 252},
+		multiline = true,
+		args = {"SYSTEM", Lang:t("info.seized_property")}
+	})
 	DoScreenFadeOut(500)
 	while not IsScreenFadedOut() do
 		Wait(10)
@@ -251,7 +256,11 @@ RegisterNetEvent('prison:client:Leave', function()
 		jailTime = 0
 		TriggerServerEvent("prison:server:SetJailStatus", 0)
 		TriggerServerEvent("prison:server:GiveJailItems")
-		TriggerEvent("chatMessage", "SYSTEM", "warning", "you've received your property back..")
+		TriggerEvent("chat:addMessage", {
+			color = {3, 132, 252},
+			multiline = true,
+			args = {"SYSTEM", Lang:t("info.received_property")}
+		})
 		inJail = false
 		RemoveBlip(currentBlip)
 		RemoveBlip(CellsBlip)
@@ -278,7 +287,11 @@ RegisterNetEvent('prison:client:UnjailPerson', function()
 	if jailTime > 0 then
 		TriggerServerEvent("prison:server:SetJailStatus", 0)
 		TriggerServerEvent("prison:server:GiveJailItems")
-		TriggerEvent("chatMessage", "SYSTEM", "warning", "You got your property back..")
+		TriggerEvent("chat:addMessage", {
+			color = {3, 132, 252},
+			multiline = true,
+			args = {"SYSTEM", Lang:t("info.received_property")}
+		})
 		inJail = false
 		RemoveBlip(currentBlip)
 		RemoveBlip(CellsBlip)
