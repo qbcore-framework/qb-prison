@@ -10,6 +10,7 @@ local Translations = {
         ["item_missing"] = "Il vous manque un objet..",
         ["escaped"] = "Vous-vous êtes échappé... Courrez !",
         ["do_some_work"] = "Travaillez pour réduire votre peine, Travail actuel: %{currentjob} ",
+        ["security_activated"] = "Le niveau de sécurité le plus élevé est actif, restez dans les blocs de cellules!"
     },
     success = {
         ["found_phone"] = "Vous avez trouvé un téléphone..",
@@ -21,6 +22,19 @@ local Translations = {
         ["timeleft"] = "Il vous reste encore... %{JAILTIME} mois",
         ["lost_job"] = "Vous êtes au chômage",
         ["job_interaction"] = "[E] Travailler sur l'électricité",
+        ["job_interaction_target"] = "Travailler : %{job}",
+        ["received_property"] = "Vous avez récupéré vos affaires personnelles..",
+        ["seized_property"] = "Vos affaires ont été saisies, vous récupérerez tout lorsque votre peine sera écoulée..",
+        ["cells_blip"] = "Cellules",
+        ["freedom_blip"] = "Réception de la prison",
+        ["canteen_blip"] = "Cantine",
+        ["work_blip"] = "Travail pénitentiaire",
+        ["target_freedom_option"] = "Vérifier temps restant",
+        ["target_canteen_option"] = "Obtenir de la nourriture",
+        ["police_alert_title"] = "Nouvel appel",
+        ["police_alert_description"] = "Evasion de Prison",
+        ["connecting_device"] = "Connecter l'appareil",
+        ["working_electricity"] = "Connecter les fils"
     }
 }
 Lang = Locale:new({
