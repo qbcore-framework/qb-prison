@@ -33,7 +33,6 @@ RegisterNetEvent('prison:server:GiveJailItems', function(escaped)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if not Player then return end
-    Wait(1000)
     if escaped then
         Player.Functions.SetMetaData("jailitems", {})
         return
@@ -41,7 +40,6 @@ RegisterNetEvent('prison:server:GiveJailItems', function(escaped)
     for _, v in pairs(Player.PlayerData.metadata["jailitems"]) do
         Player.Functions.AddItem(v.name, v.amount, false, v.info)
     end
-    Wait(1000)
     Player.Functions.SetMetaData("jailitems", {})
 end)
 
