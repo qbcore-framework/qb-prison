@@ -351,6 +351,17 @@ CreateThread(function()
 		freedom:onPlayerInOut(function(isPointInside)
 			insidefreedom = isPointInside
 			if isPointInside then
+				CreateThread(function()
+					while insidefreedom do
+						if IsControlJustReleased(0, 38) then
+							exports['qb-core']:KeyPressed()
+							exports['qb-core']:HideText()
+							TriggerEvent("prison:client:Leave")
+							break
+						end
+						Wait(0)
+					end
+				end)
 				exports['qb-core']:DrawText('[E] Check Time', 'left')
 			else
 				exports['qb-core']:HideText()
@@ -363,32 +374,21 @@ CreateThread(function()
 		canteen:onPlayerInOut(function(isPointInside)
 			insidecanteen = isPointInside
 			if isPointInside then
+				CreateThread(function()
+					while insidecanteen do
+						if IsControlJustReleased(0, 38) then
+							exports['qb-core']:KeyPressed()
+							exports['qb-core']:HideText()
+							TriggerEvent("prison:client:canteen")
+							break
+						end
+						Wait(0)
+					end
+				end)
 				exports['qb-core']:DrawText('[E] Open Canteen', 'left')
 			else
 				exports['qb-core']:HideText()
 			end
 		end)
-		while true do
-			local sleep = 1000
-			if insidefreedom then
-				sleep = 0
-				if IsControlJustReleased(0, 38) then
-					exports['qb-core']:KeyPressed()
-					Wait(500)
-					exports['qb-core']:HideText()
-					TriggerEvent("prison:client:Leave")
-				end
-			end
-			if insidecanteen then
-				sleep = 0
-				if IsControlJustReleased(0, 38) then
-					exports['qb-core']:KeyPressed()
-					Wait(500)
-					exports['qb-core']:HideText()
-					TriggerEvent("prison:client:canteen")
-				end
-			end
-			Wait(sleep)
-		end
 	end
 end)
