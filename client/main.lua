@@ -60,6 +60,28 @@ local function CreateCellsBlip()
 	EndTextCommandSetBlipName(ShopBlip)
 end
 
+-- Add clothes to prisioner
+
+local function ApplyClothes()
+	local playerPed = PlayerPedId()
+	if DoesEntityExist(playerPed) then
+		Citizen.CreateThread(function()
+			SetPedArmour(playerPed, 0)
+			ClearPedBloodDamage(playerPed)
+			ResetPedVisibleDamage(playerPed)
+			ClearPedLastWeaponDamage(playerPed)
+			ResetPedMovementClipset(playerPed, 0)
+			local gender = QBCore.Functions.GetPlayerData().charinfo.gender
+			if gender == 0 then
+				TriggerEvent('qb-clothing:client:loadOutfit', Config.Uniforms.male)
+			else
+				TriggerEvent('qb-clothing:client:loadOutfit', Config.Uniforms.female)
+			end
+		end)
+	end
+end
+
+
 -- Events
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
@@ -240,6 +262,7 @@ RegisterNetEvent('prison:client:Enter', function(time)
 	end
 	currentJob = tempJobs[math.random(1, #tempJobs)]
 	CreateJobBlip(true)
+	ApplyClothes()
 	TriggerServerEvent("prison:server:SetJailStatus", jailTime)
 	TriggerServerEvent("prison:server:SaveJailItems", jailTime)
 	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
@@ -274,6 +297,7 @@ RegisterNetEvent('prison:client:Leave', function()
 		while not IsScreenFadedOut() do
 			Wait(10)
 		end
+		TriggerServerEvent('qb-clothes:loadPlayerSkin')
 		SetEntityCoords(PlayerPedId(), Config.Locations["outside"].coords.x, Config.Locations["outside"].coords.y, Config.Locations["outside"].coords.z, 0, 0, 0, false)
 		SetEntityHeading(PlayerPedId(), Config.Locations["outside"].coords.w)
 
@@ -305,6 +329,7 @@ RegisterNetEvent('prison:client:UnjailPerson', function()
 		while not IsScreenFadedOut() do
 			Wait(10)
 		end
+		TriggerServerEvent('qb-clothes:loadPlayerSkin')
 		SetEntityCoords(PlayerPedId(), Config.Locations["outside"].coords.x, Config.Locations["outside"].coords.y, Config.Locations["outside"].coords.z, 0, 0, 0, false)
 		SetEntityHeading(PlayerPedId(), Config.Locations["outside"].coords.w)
 		Wait(500)
