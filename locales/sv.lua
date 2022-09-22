@@ -23,7 +23,11 @@ local Translations = {
         ["job_interaction"] = "[E] Electricity Work", -- This needs to be translated
     }
 }
-Lang = Locale:new({
-    phrases = Translations,
-    warnOnMissing = true
-})
+
+if GetConvar('qb_locale', 'en') == 'sv' then
+    Lang = Locale:new({
+        phrases = Translations,
+        warnOnMissing = true,
+        fallbackLang = Lang,
+    })
+end

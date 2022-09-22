@@ -37,7 +37,8 @@ local Translations = {
         ["working_electricity"] = "Connecting Wires"
     }
 }
-Lang = Locale:new({
+
+Lang = Lang or Locale:new({
     phrases = Translations,
     warnOnMissing = true
 })
