@@ -22,6 +22,11 @@ local Translations = {
         ["lost_job"] = "Du hast deine Job verloren und bist jetzt Arbeitslos",
     }
 }
-Lang = Locale:new({
-phrases = Translations,
-warnOnMissing = true})
+
+if GetConvar('qb_locale', 'en') == 'de' then
+    Lang = Locale:new({
+        phrases = Translations,
+        warnOnMissing = true,
+        fallbackLang = Lang,
+    })
+end
