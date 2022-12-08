@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 
 description 'QB-Prison'
-version '2.0.1'
+version '2.1.0'
 
 shared_scripts {
     '@qb-core/shared/locale.lua',
@@ -10,7 +10,6 @@ shared_scripts {
     'locales/*.lua',
     'config.lua'
 }
-
 
 client_scripts {
     '@PolyZone/client.lua',
