@@ -10,7 +10,7 @@ local Translations = {
         ["item_missing"] = "Falta-te um item..",
         ["escaped"] = "Tu escapaste... Sai daqui imediatamente!",
         ["do_some_work"] = "Trabalha para teres a pena reduzida. Trabalho atual: %{currentjob} ",
-		["security_activated"] = "O nível de segurança mais alto está ativo, fique dentro da sua cela!"
+	    ["security_activated"] = "O nível de segurança mais alto está ativo, fique dentro da sua cela!"
     },
     success = {
         ["found_phone"] = "Encontraste um telemóvel..",
@@ -22,7 +22,7 @@ local Translations = {
         ["timeleft"] = "Ainda te faltam... %{JAILTIME} meses",
         ["lost_job"] = "Estás Desempregado",
         ["job_interaction"] = "[E] Trabalho de Electricista",
-		["job_interaction_target"] = "Trabalhar como %{job} ",
+	    ["job_interaction_target"] = "Trabalhar como %{job} ",
         ["received_property"] = "Recebeu a sua propriedade de volta...",
         ["seized_property"] = "Sua propriedade foi confiscada, receberá tudo de volta quando seu tempo acabar.",
         ["cells_blip"] = "Celas",
