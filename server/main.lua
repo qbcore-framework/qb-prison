@@ -55,7 +55,7 @@ RegisterNetEvent('prison:server:SecurityLockdown', function()
     for _, v in pairs(QBCore.Functions.GetPlayers()) do
         local Player = QBCore.Functions.GetPlayer(v)
         if Player then
-            if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
+            if (Player.PlayerData.job.name == "police" or Player.PlayerData.job.type == "leo") and Player.PlayerData.job.onduty then
                 TriggerClientEvent("prison:client:PrisonBreakAlert", v)
             end
         end
@@ -68,7 +68,7 @@ RegisterNetEvent('prison:server:SetGateHit', function(key)
         for _, v in pairs(QBCore.Functions.GetPlayers()) do
             local Player = QBCore.Functions.GetPlayer(v)
             if Player then
-                if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
+                if (Player.PlayerData.job.name == "police" or Player.PlayerData.job.type == "leo") and Player.PlayerData.job.onduty then
                     TriggerClientEvent("prison:client:PrisonBreakAlert", v)
                 end
             end
