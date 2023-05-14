@@ -1,26 +1,40 @@
 local Translations = {
     error = {
-        ["missing_something"] = "Det ser ud til at du mangler noget...",
-        ["not_enough_police"] = "Ikke nok betjente..",
+        ["missing_something"] = "Det ser ud som om du mangler noget...",
+        ["not_enough_police"] = "Ikke nok Politi..",
         ["door_open"] = "Døren er allerede åben..",
-        ["cancelled"] = "Handlingen afbrudt..",
+        ["cancelled"] = "Proces annulleret..",
         ["didnt_work"] = "Det virkede ikke..",
         ["emty_box"] = "Kassen er tom..",
-        ["injail"] = "Du er i spjældet i %{Time} måneder..",
-        ["item_missing"] = "Du mangler en enhed..",
-        ["escaped"] = "Du flygtede! Se at kom væk i en fart!",
-        ["do_some_work"] = "Udfør noget arbejde for at nedsætte din straf, nuværende job: %{currentjob} ",
+        ["injail"] = "Du er i fængsel i %{Time} måneder..",
+        ["item_missing"] = "Du mangler en ting..",
+        ["escaped"] = "Du slap... Kom for helvede væk herfra.!",
+        ["do_some_work"] = "Gør noget arbejde for sætningsreduktion, øjeblikkeligt job: %{currentjob} ",
+        ["security_activated"] = "Højeste sikkerhedsniveau er aktivt, bliv med celleblokkene!"
     },
     success = {
-        ["found_phone"] = "Du fandt en mobil..",
-        ["time_cut"] = "Du fik nedsat din tid for at arbejde.",
+        ["found_phone"] = "Du fandt en telefon..",
+        ["time_cut"] = "Du har arbejdet lidt fri fra din dom.",
         ["free_"] = "Du er fri! Nyd det! :)",
-        ["timesup"] = "Din tid er omme! Udskriv dig selv i receptionen",
+        ["timesup"] = "Din tid er gået! Tjek din tid i besøgscenteret",
     },
     info = {
-        ["timeleft"] = "Du har stadig %{JAILTIME} måneder tilbage...",
+        ["timeleft"] = "Du er stadig nød til... %{JAILTIME} måneder",
         ["lost_job"] = "Du er arbejdsløs",
-        ["job_interaction"] = "[E] Electricity Work", -- This needs to be translated
+        ["job_interaction"] = "[E] Elektricitet Arbejde",
+        ["job_interaction_target"] = "Udfør %{job} arbejde",
+        ["received_property"] = "Du har fået din ejendom tilbage..",
+        ["seized_property"] = "Dine ting er blevet beslaglagt, du får alt tilbage, når din tid er gået..",
+        ["cells_blip"] = "Celler",
+        ["freedom_blip"] = "Fængsel reception",
+        ["canteen_blip"] = "Kantine",
+        ["work_blip"] = "Fængselsarbejde",
+        ["target_freedom_option"] = "Tjek tid",
+        ["target_canteen_option"] = "Få mad",
+        ["police_alert_title"] = "Nyt Opkald",
+        ["police_alert_description"] = "Fængselsudbrud",
+        ["connecting_device"] = "Forbinder enhed",
+        ["working_electricity"] = "Tilslutningsledninger"
     }
 }
 
