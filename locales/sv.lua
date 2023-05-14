@@ -10,6 +10,7 @@ local Translations = {
         ["item_missing"] = "Du saknar ett objekt..",
         ["escaped"] = "Du rymde... Stick nu för fan!",
         ["do_some_work"] = "Arbeta lite för att redusera straffet, snabbjobb: %{currentjob} ",
+        ["security_activated"] = "Högsta säkerhetsnivå är aktiv, håll dig inom cellblocken!"
     },
     success = {
         ["found_phone"] = "Du hittade en telefon..",
@@ -20,7 +21,20 @@ local Translations = {
     info = {
         ["timeleft"] = "Du måste fortfarande... %{JAILTIME} månader",
         ["lost_job"] = "Du är arbetslös",
-        ["job_interaction"] = "[E] Electricity Work", -- This needs to be translated
+        ["job_interaction"] = "[E] Elektrikerjobb",
+        ["job_interaction_target"] = "Gör %{job} jobbet",
+        ["received_property"] = "Du fick tillbaka din egendom..",
+        ["seized_property"] = "Din egendom har tagits i beslag, du får tillbaka allt när din tid är ute..",
+        ["cells_blip"] = "Celler",
+        ["freedom_blip"] = "Fängelse reception",
+        ["canteen_blip"] = "Matsal",
+        ["work_blip"] = "Fängelsejobb",
+        ["target_freedom_option"] = "Kolla tid",
+        ["target_canteen_option"] = "Få mat",
+        ["police_alert_title"] = "Nytt samtal",
+        ["police_alert_description"] = "Fängelseutbrott",
+        ["connecting_device"] = "Ansluter enhet",
+        ["working_electricity"] = "Ansluter kablar"
     }
 }
 
