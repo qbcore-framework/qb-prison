@@ -93,8 +93,9 @@ end
 
 CreateThread(function()
     local isInside = false
-    local jobZone = nil
     local lastLocation = nil
+    local verifiedLocation = 0
+    local textShown = false
     for k in pairs(Config.Locations.jobs) do
         for i = 1, #Config.Locations.jobs[k] do
             local current = Config.Locations.jobs[k][i]
