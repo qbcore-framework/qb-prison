@@ -93,6 +93,8 @@ end
 
 CreateThread(function()
     local isInside = false
+    local jobZone = nil
+    local lastLocation = nil
     for k in pairs(Config.Locations.jobs) do
         for i = 1, #Config.Locations.jobs[k] do
             local current = Config.Locations.jobs[k][i]
@@ -119,15 +121,17 @@ CreateThread(function()
                     distance = 2.5
                 })
             else
-                local electricityzone = BoxZone:Create(current.coords.xyz, 3.0, 5.0, {
+                jobZone = BoxZone:Create(current.coords.xyz, 3.0, 5.0, {
                     name = "work_"..k.."_"..i,
                     debugPoly = false,
                 })
-                electricityzone:onPlayerInOut(function(isPointInside)
+                lastLocation = i
+                jobZone:onPlayerInOut(function(isPointInside)
                     isInside = isPointInside and inJail and currentJob and not Config.Locations.jobs[k][i].done and not isWorking
                     if isInside then
                         exports['qb-core']:DrawText(Lang:t("info.job_interaction"), 'left')
                     else
+                        verifiedLocation = currentLocation
                         exports['qb-core']:HideText()
                     end
                 end)
@@ -139,10 +143,17 @@ CreateThread(function()
         while true do
             local sleep = 1000
             if isInside then
-                sleep = 0
-                if IsControlJustReleased(0, 38) then
-                    StartWork()
-                    sleep = 1000
+                if verifiedLocation ~= lastLocation then
+                    textShown = true
+                    sleep = 0
+                    if IsControlJustReleased(0, 38) then
+                        StartWork()
+                        lastLocation = currentLocation
+                        sleep = 1000
+                    end
+                elseif textShown then
+                    exports['qb-core']:HideText()
+                    textShown = false
                 end
             end
             Wait(sleep)
