@@ -122,7 +122,7 @@ CreateThread(function()
                     distance = 2.5
                 })
             else
-                jobZone = BoxZone:Create(current.coords.xyz, 3.0, 5.0, {
+                local jobZone = BoxZone:Create(current.coords.xyz, 3.0, 5.0, {
                     name = "work_"..k.."_"..i,
                     debugPoly = false,
                 })
