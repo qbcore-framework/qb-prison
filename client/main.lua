@@ -416,3 +416,16 @@ CreateThread(function()
 		end)
 	end
 end)
+
+CreateThread(function()
+    for _, station in pairs(Config.Locations['jail']) do
+        local blip = AddBlipForCoord(station.coords.x, station.coords.y, station.coords.z)
+        SetBlipSprite(blip, 188)
+        SetBlipAsShortRange(blip, true)
+        SetBlipScale(blip, 0.8)
+        SetBlipColour(blip, 0)
+        BeginTextCommandSetBlipName('STRING')
+        AddTextComponentSubstringPlayerName(station.label)
+        EndTextCommandSetBlipName(blip)
+    end
+end)
