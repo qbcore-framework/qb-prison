@@ -86,6 +86,9 @@ Config.Locations = {
     ["shop"] = {
         coords = vector4(1777.59, 2560.52, 44.62, 187.83)
     },
+    ["prison"] = {
+        label = 'Bolingbroke Penitentiary', coords = vector4(1845.903, 2585.873, 45.672, 272.249) 
+    },
     spawns = {
         [1] = {
             coords = vector4(1661.046, 2524.681, 45.564, 260.545)
