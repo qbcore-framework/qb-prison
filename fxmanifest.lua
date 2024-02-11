@@ -1,7 +1,9 @@
 fx_version 'cerulean'
 game 'gta5'
-
-description 'QB-Prison'
+lua54 'yes'
+use_fxv2_oal 'yes'
+author 'Kakarot'
+description 'Allows players to be jailed, escape from jail and work in jail'
 version '2.1.0'
 
 shared_scripts {
@@ -23,6 +25,3 @@ client_scripts {
 }
 
 server_script 'server/main.lua'
-
-use_fxv2_oal 'yes'
-lua54 'yes'
