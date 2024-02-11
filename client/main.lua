@@ -416,3 +416,15 @@ CreateThread(function()
 		end)
 	end
 end)
+
+CreateThread(function() 
+local prison = Config.Locations['jail']
+local blip = AddBlipForCoord(prison.coords.x, prison.coords.y, prison.coords.z)
+SetBlipSprite(blip, 188)
+SetBlipAsShortRange(blip, true)
+SetBlipScale(blip, 0.8)
+SetBlipColour(blip, 0)
+BeginTextCommandSetBlipName('STRING')
+AddTextComponentSubstringPlayerName(prison.label)
+EndTextCommandSetBlipName(blip)
+end)
