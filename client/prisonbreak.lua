@@ -24,13 +24,6 @@ local Gates = {
 
 -- Functions
 
---- This will be triggered once a hack is done on a gate
---- @param success boolean
---- @return nil
-local function OnHackDone(success)
-    Config.OnHackDone(success, currentGate, Gates[currentGate])
-end
-
 --- This will draw 3d text at the given location with the given text
 --- @param x number
 --- @param y number
@@ -83,8 +76,13 @@ RegisterNetEvent('electronickit:UseElectronickit', function()
                 flags = 16,
             }, {}, {}, function() -- Done
                 StopAnimTask(PlayerPedId(), "anim@gangops@facility@servers@", "hotwire", 1.0)
-                TriggerEvent("mhacking:show")
-                TriggerEvent("mhacking:start", math.random(5, 9), math.random(10, 18), OnHackDone)
+                local success = exports['qb-minigames']:Hacking(5, 30) -- code block size & seconds to solve
+                if success then
+                    TriggerServerEvent("prison:server:SetGateHit", currentGate)
+                    TriggerServerEvent('qb-doorlock:server:updateState', Gates[currentGate].gatekey, false, false, false, true)
+                else
+                    TriggerServerEvent("prison:server:SecurityLockdown")
+                end
             end, function() -- Cancel
                 StopAnimTask(PlayerPedId(), "anim@gangops@facility@servers@", "hotwire", 1.0)
                 QBCore.Functions.Notify(Lang:t("error.cancelled"), "error")
