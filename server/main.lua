@@ -38,7 +38,7 @@ RegisterNetEvent('prison:server:GiveJailItems', function(escaped)
         return
     end
     for _, v in pairs(Player.PlayerData.metadata['jailitems']) do
-        Player.Functions.AddItem(v.name, v.amount, false, v.info)
+        exports['qb-inventory']:AddItem(src, v.name, v.amount, false, v.info, 'prison:server:GiveJailItems')
     end
     Player.Functions.SetMetaData('jailitems', {})
 end)
@@ -99,7 +99,7 @@ RegisterNetEvent('prison:server:JailAlarm', function()
     if AlarmActivated then return end
     local playerPed = GetPlayerPed(source)
     local coords = GetEntityCoords(playerPed)
-    local middle = vec2(Config.Locations['middle'].coords.x, Config.Locations['middle'].coords.y)
+    local middle = vec2(Config.Locations['middle'].x, Config.Locations['middle'].y)
     if #(coords.xy - middle) < 200 then return error('"prison:server:JailAlarm" triggered whilst the player was too close to the prison, cancelled event') end
     TriggerClientEvent('prison:client:JailAlarm', -1, true)
     SetTimeout(5 * 60000, function()
@@ -114,8 +114,8 @@ RegisterNetEvent('prison:server:CheckChance', function()
     local chance = math.random(100)
     local odd = math.random(100)
     if chance ~= odd then return end
-    if not Player.Functions.AddItem('phone', 1) then return end
-    TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items['phone'], 'add')
+    if not exports['qb-inventory']:AddItem(src, 'phone', 1, false, false, 'prison:server:CheckChance') then return end
+    TriggerClientEvent('qb-inventory:client:ItemBox', src, QBCore.Shared.Items['phone'], 'add')
     TriggerClientEvent('QBCore:Notify', src, Lang:t('success.found_phone'), 'success')
     GotItems[src] = true
 end)
