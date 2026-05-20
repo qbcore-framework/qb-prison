@@ -1,3 +1,5 @@
+local sharedItems = exports['qb-core']:GetShared('Items')
+
 local currentGate = 0
 local requiredItemsShowed = false
 local requiredItems = {}
@@ -56,8 +58,14 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerJob = QBCore.Functions.GetPlayerData().job
 end)
 
-RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
-    PlayerJob = JobInfo
+RegisterNetEvent('QBCore:Client:OnPlayerUpdated', function(key, val)
+    if key == 'job' then
+        local JobInfo = val
+        PlayerJob = JobInfo
+    elseif key == 'all' then
+        local JobInfo = val.job
+        PlayerJob = JobInfo
+    end
 end)
 
 RegisterNetEvent('electronickit:UseElectronickit', function()
@@ -163,8 +171,8 @@ end)
 CreateThread(function()
     Wait(500)
     requiredItems = {
-        [1] = { name = QBCore.Shared.Items['electronickit']['name'], image = QBCore.Shared.Items['electronickit']['image'] },
-        [2] = { name = QBCore.Shared.Items['gatecrack']['name'], image = QBCore.Shared.Items['gatecrack']['image'] },
+        [1] = { name = sharedItems['electronickit']['name'], image = sharedItems['electronickit']['image'] },
+        [2] = { name = sharedItems['gatecrack']['name'], image = sharedItems['gatecrack']['image'] },
     }
     while true do
         inRange = false

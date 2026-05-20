@@ -1,15 +1,16 @@
-local QBCore = exports['qb-core']:GetCoreObject()
+local QBCore = exports['qb-core']:GetCoreObject({ 'Functions' })
+local sharedItems = exports['qb-core']:GetShared('Items')
 local GotItems = {}
 local AlarmActivated = false
 
 RegisterNetEvent('prison:server:SetJailStatus', function(jailTime)
     local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
+    local Player = exports['qb-core']:GetPlayer(src)
     if not Player then return end
-    Player.Functions.SetMetaData('injail', jailTime)
+    Player.SetMetaData('injail', jailTime)
     if jailTime > 0 then
         if Player.PlayerData.job.name ~= 'unemployed' then
-            Player.Functions.SetJob('unemployed')
+            Player.SetJob('unemployed')
             TriggerClientEvent('QBCore:Notify', src, Lang:t('info.lost_job'))
         end
     else
@@ -19,41 +20,41 @@ end)
 
 RegisterNetEvent('prison:server:SaveJailItems', function()
     local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
+    local Player = exports['qb-core']:GetPlayer(src)
     if not Player then return end
     if not Player.PlayerData.metadata['jailitems'] or table.type(Player.PlayerData.metadata['jailitems']) == 'empty' then
-        Player.Functions.SetMetaData('jailitems', Player.PlayerData.items)
-        Player.Functions.AddMoney('cash', 80, 'jail money')
+        Player.SetMetaData('jailitems', Player.PlayerData.items)
+        Player.AddMoney('cash', 80, 'jail money')
         Wait(2000)
-        Player.Functions.ClearInventory()
+        Player.ClearInventory()
     end
 end)
 
 RegisterNetEvent('prison:server:GiveJailItems', function(escaped)
     local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
+    local Player = exports['qb-core']:GetPlayer(src)
     if not Player then return end
     if escaped then
-        Player.Functions.SetMetaData('jailitems', {})
+        Player.SetMetaData('jailitems', {})
         return
     end
     for _, v in pairs(Player.PlayerData.metadata['jailitems']) do
         exports['qb-inventory']:AddItem(src, v.name, v.amount, false, v.info, 'prison:server:GiveJailItems')
     end
-    Player.Functions.SetMetaData('jailitems', {})
+    Player.SetMetaData('jailitems', {})
 end)
 
 RegisterNetEvent('prison:server:ResetJailItems', function()
     local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
+    local Player = exports['qb-core']:GetPlayer(src)
     if not Player then return end
-    Player.Functions.SetMetaData('jailitems', {})
+    Player.SetMetaData('jailitems', {})
 end)
 
 RegisterNetEvent('prison:server:SecurityLockdown', function()
     TriggerClientEvent('prison:client:SetLockDown', -1, true)
     for _, v in pairs(QBCore.Functions.GetPlayers()) do
-        local Player = QBCore.Functions.GetPlayer(v)
+        local Player = exports['qb-core']:GetPlayer(v)
         if Player then
             if Player.PlayerData.job.name == 'police' and Player.PlayerData.job.onduty then
                 TriggerClientEvent('prison:client:PrisonBreakAlert', v)
@@ -66,7 +67,7 @@ RegisterNetEvent('prison:server:SetGateHit', function(key)
     TriggerClientEvent('prison:client:SetGateHit', -1, key, true)
     if math.random(1, 100) <= 50 then
         for _, v in pairs(QBCore.Functions.GetPlayers()) do
-            local Player = QBCore.Functions.GetPlayer(v)
+            local Player = exports['qb-core']:GetPlayer(v)
             if Player then
                 if Player.PlayerData.job.name == 'police' and Player.PlayerData.job.onduty then
                     TriggerClientEvent('prison:client:PrisonBreakAlert', v)
@@ -78,7 +79,7 @@ end)
 
 RegisterNetEvent('prison:server:CheckRecordStatus', function()
     local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
+    local Player = exports['qb-core']:GetPlayer(src)
     if not Player then return end
     local CriminalRecord = Player.PlayerData.metadata['criminalrecord']
     local currentDate = os.date('*t')
@@ -109,13 +110,13 @@ end)
 
 RegisterNetEvent('prison:server:CheckChance', function()
     local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
+    local Player = exports['qb-core']:GetPlayer(src)
     if not Player or Player.PlayerData.metadata.injail == 0 or GotItems[src] then return end
     local chance = math.random(100)
     local odd = math.random(100)
     if chance ~= odd then return end
     if not exports['qb-inventory']:AddItem(src, 'phone', 1, false, false, 'prison:server:CheckChance') then return end
-    TriggerClientEvent('qb-inventory:client:ItemBox', src, QBCore.Shared.Items['phone'], 'add')
+    TriggerClientEvent('qb-inventory:client:ItemBox', src, sharedItems['phone'], 'add')
     TriggerClientEvent('QBCore:Notify', src, Lang:t('success.found_phone'), 'success')
     GotItems[src] = true
 end)

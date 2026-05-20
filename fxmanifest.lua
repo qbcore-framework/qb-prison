@@ -4,7 +4,7 @@ lua54 'yes'
 use_fxv2_oal 'yes'
 author 'Kakarot'
 description 'Allows players to be jailed, escape from jail and work in jail'
-version '2.1.0'
+version '2.3.0'
 
 shared_scripts {
     '@qb-core/shared/locale.lua',
